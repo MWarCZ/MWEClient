@@ -1,32 +1,85 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-navigation-drawer app>
+      <!-- -->
+    </v-navigation-drawer>
+
+    <v-app-bar
+      app
+      extended
+      hide-on-scroll
+      >
+      <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
+      <v-btn icon @click="log">
+        <v-icon x-large>mdi-home</v-icon>
+      </v-btn>
+      <v-toolbar-title>MWEClient</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn icon @click="$vuetify.theme.dark = !$vuetify.theme.dark">
+        <v-icon>mdi-theme-light-dark</v-icon>
+      </v-btn>
+      <!-- <v-btn icon @click="log">
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn> -->
+      <v-btn  text>
+        <v-icon>mdi-account-circle</v-icon>
+        Login
+      </v-btn>
+      <template #extension>
+        <v-tabs>
+          <v-tab to="/">Home</v-tab>
+          <v-tab to="/about">About</v-tab>
+          <v-tab to="/login">Login</v-tab>
+        </v-tabs>
+      </template>
+    </v-app-bar>
+
+    <v-content>
+      <v-container fluid>
+        <router-view/>
+        <v-overlay
+          :value="dialog"
+          :opacity="0.9"
+          :dark="false"
+          >
+          <Login @submit:it="dialog = !$event"/>
+        </v-overlay>
+      </v-container>
+    </v-content>
+
+    <v-footer app>
+      <span>&copy; 2020</span>
+    </v-footer>
+
+  </v-app>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+// import HelloWorld from './components/HelloWorld'
+import Login from './components/Login'
 
-#nav {
-  padding: 30px;
+export default {
+  name: 'App',
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+  components: {
+    // HelloWorld
+    Login,
+  },
 
-    &.router-link-exact-active {
-      color: #42b983;
+  data: () => {
+    return {
+      isDark: true,
+      dialog: true,
     }
-  }
+  },
+  methods: {
+    log () {
+      console.log(this.dialog)
+    },
+    toggleTheme (event) {
+      console.log(event)
+    },
+  },
+
 }
-</style>
+</script>
