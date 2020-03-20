@@ -1,8 +1,7 @@
 <template>
   <v-app>
-    <v-navigation-drawer app>
-      <!-- -->
-    </v-navigation-drawer>
+    <!-- <v-navigation-drawer app>
+    </v-navigation-drawer> -->
 
     <v-app-bar
       app
@@ -18,9 +17,9 @@
       <v-btn icon @click="$vuetify.theme.dark = !$vuetify.theme.dark">
         <v-icon>mdi-theme-light-dark</v-icon>
       </v-btn>
-      <!-- <v-btn icon @click="log">
+      <v-btn icon @click="log">
         <v-icon>mdi-magnify</v-icon>
-      </v-btn> -->
+      </v-btn>
       <v-btn  text>
         <v-icon>mdi-account-circle</v-icon>
         Login
@@ -55,15 +54,22 @@
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld'
+// import ApolloExample from './components/ApolloExample'
 import Login from './components/Login'
+import gqlHello from './graphql/Hello.gql'
 
 export default {
   name: 'App',
 
   components: {
-    // HelloWorld
+    // ApolloExample
     Login,
+  },
+
+  apollo: {
+    hello: {
+      query: gqlHello,
+    },
   },
 
   data: () => {
@@ -74,7 +80,7 @@ export default {
   },
   methods: {
     log () {
-      console.log(this.dialog)
+      console.log(this)
     },
     toggleTheme (event) {
       console.log(event)
