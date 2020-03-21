@@ -1,0 +1,10 @@
+#import "./UserFragment.gql"
+
+mutation login($login: String!, $password: String!) {
+  login(input:{login: $login, password: $password}) {
+    token
+  	user {
+      ...user
+    }
+  }
+}
