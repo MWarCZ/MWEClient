@@ -1,15 +1,16 @@
 
 <template>
-  <v-list three-line >
+  <v-list three-line flat>
     <!-- <v-subheader>REPORTS</v-subheader> -->
     <!-- <v-list-item-group> -->
-      <v-list-item
+      <v-list-group
         v-for="(group, index) in groups"
         :key="`group-${index}`"
         :class="{removed: group.removed, protected: group.protected}"
-        @click="1"
+        :ripple="false"
+        append-icon=""
       >
-
+        <template v-slot:activator>
           <v-list-item-action>
             <v-icon v-if="group.protected">mdi-shield</v-icon>
             <v-icon v-else-if="group.removed">mdi-account-off-outline</v-icon>
@@ -41,8 +42,9 @@
               </template>
             </v-list>
           </v-menu>
+        </template>
 
-      </v-list-item>
+      </v-list-group>
     <!-- </v-list-item-group> -->
   </v-list>
 

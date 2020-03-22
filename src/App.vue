@@ -14,7 +14,7 @@
       </v-btn>
       <v-toolbar-title>MWEClient</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon @click="$vuetify.theme.dark = !$vuetify.theme.dark">
+      <v-btn icon @click="nightMode = !nightMode">
         <v-icon>mdi-theme-light-dark</v-icon>
       </v-btn>
 
@@ -105,6 +105,8 @@ import gqlConnected from './graphql/local/local.gql'
 import gqlLogin from './graphql/Login.gql'
 import { onLogin, onLogout } from './vue-apollo'
 
+const SETTINGS_NIGHTMODE = 'NIGHTMODE'
+
 export default {
   name: 'App',
 
@@ -115,7 +117,7 @@ export default {
 
   data: () => {
     return {
-      isDark: true,
+      nightMode: false,
       dialog: true,
       client: null,
       authLoading: false,
@@ -124,6 +126,15 @@ export default {
       authAlertType: 'error',
       checkLoginInLoop: false,
     }
+  },
+  created () {
+    const nightMode = JSON.parse(localStorage.getItem(SETTINGS_NIGHTMODE)) || false
+    this.nightMode = nightMode
+  },
+  watch: {
+    nightMode: function (value) {
+      this.setNightMode(value)
+    },
   },
 
   apollo: {
@@ -156,6 +167,10 @@ export default {
   },
 
   methods: {
+    setNightMode (value) {
+      localStorage.setItem(SETTINGS_NIGHTMODE, JSON.stringify(value))
+      this.$vuetify.theme.dark = value
+    },
     log () {
       console.log(this)
     },
