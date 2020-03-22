@@ -1,0 +1,7 @@
+#import "./GroupFragment.gql"
+
+query groups {
+  groups {
+    ...group
+  }
+}

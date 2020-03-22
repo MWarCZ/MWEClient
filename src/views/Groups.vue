@@ -2,28 +2,32 @@
   <v-container>
     <div v-if="client">OK</div>
     <div v-else>KO</div>
-    <Login />
+    <ListGroups :groups="groups" />
   </v-container>
 </template>
 
 <script>
-// @ is an alias to /src
-import Login from '@/components/Login.vue'
+import ListGroups from '../components/ListGroups.vue'
 import gqlClient from '../graphql/Client.gql'
+import gqlGroups from '../graphql/Groups.gql'
 
 export default {
-  name: 'LoginView',
+  name: 'GroupsView',
   components: {
-    Login,
+    ListGroups,
   },
   data: () => ({
     client: null,
+    groups: [],
   }),
   apollo: {
     client () {
       return {
         query: gqlClient,
       }
+    },
+    groups: {
+      query: gqlGroups,
     },
   },
 }

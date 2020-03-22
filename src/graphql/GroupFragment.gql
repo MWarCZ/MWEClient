@@ -1,0 +1,7 @@
+fragment group on Group {
+  id
+  name
+  describe
+  protected
+  removed
+}

@@ -1,7 +1,7 @@
 #import "./UserFragment.gql"
 #import "./UserMembershipFragment.gql"
 
-query {
+query client {
   client: user {
     ...user
     membership {

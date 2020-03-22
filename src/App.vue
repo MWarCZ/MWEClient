@@ -18,19 +18,49 @@
         <v-icon>mdi-theme-light-dark</v-icon>
       </v-btn>
 
-      <v-btn v-if="client" text @click="logout">
+      <!-- <v-btn v-if="client" text @click="logout">
         <v-icon>mdi-account-circle</v-icon>
         Logout
       </v-btn>
       <v-btn v-else text>
         <v-icon>mdi-account-circle</v-icon>
         Login
-      </v-btn>
+      </v-btn> -->
+      <v-menu offset-y>
+        <template v-slot:activator="{ on }">
+          <v-btn v-if="client" text v-on="on">
+            <v-icon>mdi-account-circle</v-icon>
+            {{client.login}}
+          </v-btn>
+          <v-btn v-else text>
+            <v-icon>mdi-accout-circle</v-icon>
+            Login
+          </v-btn>
+        </template>
+        <v-card v-if="client">
+          <v-card-title primary-title>
+            {{client.login}} {{client.login}}
+          </v-card-title>
+          <v-card-text>
+            Toto je text xxx.
+          </v-card-text>
+        </v-card>
+        <v-list>
+          <v-divider></v-divider>
+          <v-list-item @click="logout">
+            <v-list-item-icon>
+              <v-icon>mdi-logout</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Odhlásit</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
 
       <template #extension v-if="client">
         <v-tabs>
           <v-tab to="/">Home</v-tab>
           <v-tab to="/about">About</v-tab>
+          <v-tab to="/groups">Groups</v-tab>
           <v-tab to="/login">Login</v-tab>
         </v-tabs>
       </template>
@@ -38,7 +68,8 @@
 
     <v-content>
       <v-container fluid>
-        <router-view v-if="client"/>
+        <router-view />
+        <!-- <router-view v-if="client"/> -->
         <v-overlay
           :value="!client"
           :opacity="0.9"
@@ -52,6 +83,7 @@
             @success="login"
           />
         </v-overlay>
+
       </v-container>
     </v-content>
 
@@ -109,7 +141,16 @@ export default {
     client () {
       return {
         query: gqlClient,
-        pollInterval: this.checkLoginInLoop ? 1000 * 30 : null,
+        update (data) {
+          if (data.client) {
+            this.$apollo.queries.client.startPolling(1000 * 15)
+          } else {
+            this.$apollo.queries.client.stopPolling()
+            this.authAlertShow = false
+          }
+          // console.log('UPDATE CLIENT', { data, loop: !data.client })
+          return data.client
+        },
       }
     },
   },

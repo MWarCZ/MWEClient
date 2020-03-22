@@ -84,11 +84,6 @@ export default {
     password: '',
     showPassword: false,
   }),
-  computed: {
-    alertLogin () {
-      return this.alert
-    },
-  },
 
   methods: {
     submit () {
