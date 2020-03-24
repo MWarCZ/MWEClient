@@ -1,0 +1,12 @@
+fragment groupMember on Member {
+  user {
+    id
+    firstName
+    lastName
+    login
+  }
+  addMember
+  removeMember
+  showMembers
+  protected
+}
