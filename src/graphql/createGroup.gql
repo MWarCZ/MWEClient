@@ -1,0 +1,7 @@
+#import "./GroupFragment.gql"
+
+mutation createGroup($name: String!, $describe: String) {
+  createNewGroup(input:{name: $name, describe: $describe}) {
+  	...group
+  }
+}

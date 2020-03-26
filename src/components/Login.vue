@@ -40,6 +40,13 @@
             <v-icon color="black">mdi-github</v-icon>
           </v-btn>
         </div>
+        <div>
+          <v-radio-group v-model="expires" label="Limit platnosti přihlášení:">
+            <v-radio label="1 hodina" value="1h"></v-radio>
+            <v-radio label="8 hodin" value="8h"></v-radio>
+            <v-radio label="1 den" value="1d"></v-radio>
+          </v-radio-group>
+        </div>
       </v-form>
     </v-card-text>
     <v-card-actions class="justify-center">
@@ -83,6 +90,7 @@ export default {
     login: '',
     password: '',
     showPassword: false,
+    expires: '1h',
   }),
 
   methods: {
@@ -91,6 +99,7 @@ export default {
       const payload = {
         login: this.login,
         password: this.password,
+        expires: this.expires,
       }
       this.$emit('submit', payload)
       if (valid) {
