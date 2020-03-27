@@ -1,6 +1,9 @@
 // @emit submit Odesalani formulare.
+//  @param { login, password, expires }
 // @emit success Uspesne obdrzena odpoved s daty.
+//  @param { login, password, expires }
 // @emit fail Neuspesna odpoved nebo selhani spojeni.
+//  @param { login, password, expires }
 <template>
   <v-card :loading="loading">
       <v-alert :type="alertType" dismissible v-model="alertShow">

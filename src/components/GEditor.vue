@@ -1,23 +1,39 @@
+// @emit submit @param { name, describe }
+// @emit success @param { name, describe }
+// @emit fail @param { name, describe }
 <template>
   <v-form v-model="valid" ref="form" lazy-validation>
-    <v-text-field
-      label="Name"
-      v-model="newName"
-      :readonly="nameReadOnly"
-      required
-    ></v-text-field>
-    <v-text-field
-      label="E-mail"
-      v-model="newDescribe"
-      required
-    ></v-text-field>
-
-    <v-btn
-      @click="submit"
-      :disabled="!valid"
-    >
-      Odeslat/Uložit
-    </v-btn>
+    <v-row justify="center">
+      <v-text-field
+        label="Název"
+        v-model="newName"
+        :readonly="readonlyName"
+        outlined
+        required
+        filled
+        :hint="readonlyName?'Název není možné upravit.':''"
+      ></v-text-field>
+    </v-row>
+    <v-row justify="center">
+      <v-text-field
+        label="Popis"
+        v-model="newDescribe"
+        outlined
+        required
+        filled
+      ></v-text-field>
+    </v-row>
+    <v-row justify="center">
+      <v-btn
+        @click="emitEvents"
+        :disabled="!valid"
+        color="primary"
+        block
+      >
+        <v-progress-circular v-if="loading" indeterminate />
+        <span v-else>{{submitTitle}}</span>
+      </v-btn>
+    </v-row>
   </v-form>
 
 </template>
@@ -27,23 +43,40 @@ export default {
   props: {
     name: {
       type: String,
+      default: '',
+      required: true,
     },
     describe: {
       type: String,
+      default: '',
+      required: true,
     },
-    nameReadOnly: {
-      type: Boolean,
-      default: false,
+    readonlyName: Boolean,
+    loading: Boolean,
+    submitTitle: {
+      type: String,
+      default: 'Odeslat',
     },
   },
-  data: () => ({
-    valid: false,
-    newName: this.name,
-    newDescribe: this.describe,
-  }),
+  data () {
+    return {
+      valid: false,
+      newName: this.name,
+      newDescribe: this.describe,
+    }
+  },
   methods: {
-    emitSubmit (name, describe) {
-      this.$emit('submit', { name, describe })
+    emitEvents () {
+      const payload = {
+        name: this.newName,
+        describe: this.newDescribe,
+      }
+      this.$emit('submit', payload)
+      if (this.valid) {
+        this.$emit('success', payload)
+      } else {
+        this.$emit('fail', payload)
+      }
     },
   },
 

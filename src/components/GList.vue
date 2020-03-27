@@ -1,3 +1,4 @@
+// @emit action @param { item, group }
 <template>
   <v-list>
     <v-list-group
@@ -33,6 +34,7 @@
 
         <DotMenu :items="menuItems" @select="emitAction($event, group)" />
 
+        <slot name="append-group" :group="group" />
       </template>
       <v-container>
         <slot name="extend-group" :group="group" />

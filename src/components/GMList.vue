@@ -1,3 +1,4 @@
+// @emit action @param { item, member }
 <template>
   <v-list>
     <template v-for="(member, index) in members">

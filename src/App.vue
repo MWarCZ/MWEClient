@@ -68,9 +68,9 @@
 
     <v-content>
       <v-container fluid>
-        <router-view />
-        <!-- <router-view v-if="client"/> -->
-        <v-overlay
+        <!-- <router-view /> -->
+        <router-view v-if="client"/>
+        <!-- <v-overlay
           :value="!client"
           :opacity="0.9"
           :dark="false"
@@ -82,7 +82,7 @@
             :alertType="authAlertType"
             @success="login"
           />
-        </v-overlay>
+        </v-overlay> -->
 
       </v-container>
     </v-content>
@@ -90,6 +90,18 @@
     <v-footer app>
       <span>&copy; 2020</span>
     </v-footer>
+
+    <FullDialog :value="!client" title="Přihlášení">
+      <v-container>
+        <Login class="max-fullscreen"
+          :loading="authLoading"
+          :alertShow="authAlertShow"
+          :alertMessage="authAlertMessage"
+          :alertType="authAlertType"
+          @success="login"
+        />
+      </v-container>
+    </FullDialog>
 
   </v-app>
 </template>
@@ -104,6 +116,7 @@ import gqlClient from './graphql/Client.gql'
 import gqlConnected from './graphql/local/local.gql'
 import gqlLogin from './graphql/Login.gql'
 import { onLogin, onLogout } from './vue-apollo'
+import FullDialog from './components/FullDialog'
 
 const SETTINGS_NIGHTMODE = 'NIGHTMODE'
 
@@ -113,6 +126,7 @@ export default {
   components: {
     // ApolloExample
     Login,
+    FullDialog,
   },
 
   data: () => {
@@ -181,7 +195,7 @@ export default {
       try {
         this.authLoading = true
         this.authAlertShow = false
-        const { login = '', password = '' } = payload
+        const { login = '', password = '', expires } = payload
         // console.warn(gqlLogin)
         // console.warn(payload)
         const result = await this.$apollo.mutate({
@@ -189,6 +203,7 @@ export default {
           variables: {
             login,
             password,
+            expires,
           },
         })
         this.checkLoginInLoop = true
