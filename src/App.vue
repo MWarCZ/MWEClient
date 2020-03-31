@@ -61,6 +61,7 @@
           <v-tab to="/">Home</v-tab>
           <v-tab to="/about">About</v-tab>
           <v-tab to="/groups">Groups</v-tab>
+          <v-tab to="/users">Users</v-tab>
           <v-tab to="/login">Login</v-tab>
         </v-tabs>
       </template>
@@ -118,6 +119,8 @@ import gqlLogin from './graphql/Login.gql'
 import { onLogin, onLogout } from './vue-apollo'
 import FullDialog from './components/FullDialog'
 
+import { setSimulateLoading } from './simulateLoading'
+
 const SETTINGS_NIGHTMODE = 'NIGHTMODE'
 
 export default {
@@ -142,6 +145,7 @@ export default {
     }
   },
   created () {
+    setSimulateLoading(true)
     const nightMode = JSON.parse(localStorage.getItem(SETTINGS_NIGHTMODE)) || false
     this.nightMode = nightMode
   },

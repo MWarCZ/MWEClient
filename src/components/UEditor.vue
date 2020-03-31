@@ -1,26 +1,46 @@
-// @emit submit @param { name, describe }
-// @emit success @param { name, describe }
-// @emit fail @param { name, describe }
+// @emit submit @param { login, firstName, lastName, email }
+// @emit success @param { login, firstName, lastName, email }
+// @emit fail @param { login, firstName, lastName, email }
 <template>
   <v-form v-model="valid" ref="form">
     <v-row justify="center">
       <v-text-field
-        label="Název"
-        v-model="newName"
-        :readonly="readonlyName"
+        label="Login"
+        v-model="newLogin"
+        :readonly="readonlyLogin"
         outlined
         required
         filled
-        :hint="readonlyName?'Název není možné upravit.':''"
+        clearable
+        :hint="readonlyLogin?'Login není možné upravit.':''"
       ></v-text-field>
     </v-row>
     <v-row justify="center">
       <v-text-field
-        label="Popis"
-        v-model="newDescribe"
+        label="Jméno"
+        v-model="newFirstName"
         outlined
         required
         filled
+        clearable
+      ></v-text-field>
+      <v-text-field
+        label="Příjmení"
+        v-model="newLastName"
+        outlined
+        required
+        filled
+        clearable
+      ></v-text-field>
+    </v-row>
+    <v-row justify="center">
+      <v-text-field
+        label="Email"
+        v-model="newEmail"
+        outlined
+        required
+        filled
+        clearable
       ></v-text-field>
     </v-row>
     <v-row justify="center">
@@ -41,17 +61,23 @@
 
 export default {
   props: {
-    name: {
+    login: {
       type: String,
       default: '',
-      required: true,
     },
-    describe: {
+    firstName: {
       type: String,
       default: '',
-      required: true,
     },
-    readonlyName: Boolean,
+    lastName: {
+      type: String,
+      default: '',
+    },
+    email: {
+      type: String,
+      default: '',
+    },
+    readonlyLogin: Boolean,
     loading: Boolean,
     submitTitle: {
       type: String,
@@ -61,20 +87,24 @@ export default {
   data () {
     return {
       valid: false,
-      newName: this.name,
-      newDescribe: this.describe,
+      newLogin: this.login,
+      newFirstName: this.firstName,
+      newLastName: this.lastName,
+      newEmail: this.email,
     }
   },
   methods: {
     emitEvents () {
       const payload = {
-        name: this.newName,
-        describe: this.newDescribe,
+        login: this.newLogin,
+        firstName: this.newFirstName,
+        lastName: this.newLastName,
+        email: this.newEmail,
       }
       this.$emit('submit', payload)
       if (this.valid) {
         this.$emit('success', payload)
-        this.newName = this.newDescribe = ''
+        this.login = this.firstName = this.lastName = this.email = ''
       } else {
         this.$emit('fail', payload)
       }

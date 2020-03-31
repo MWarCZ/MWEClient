@@ -1,0 +1,8 @@
+
+mutation removeMember($name: String!, $login: String!) {
+  removeMember(
+    filter:{
+      group: {name: $name}, 
+      user: {login: $login}
+    })
+}

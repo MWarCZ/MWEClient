@@ -20,7 +20,7 @@
 
         <v-list-item-content v-if="member.user">
           <v-list-item-title>
-            <b>{{member.user.login}}</b>: {{member.user.firstName}} {{member.user.lastName}}
+            [<b>{{member.user.login}}</b>] {{member.user.lastName}} {{member.user.firstName}}
           </v-list-item-title>
         </v-list-item-content>
 
