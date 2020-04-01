@@ -43,7 +43,38 @@
         clearable
       ></v-text-field>
     </v-row>
-    <slot name="form-extend" :loading="loading"></slot>
+    <v-row justify="center">
+      <v-text-field
+        label="Heslo"
+        v-model="newPassword"
+        outlined
+        required
+        filled
+        clearable
+      ></v-text-field>
+    </v-row>
+    <v-row justify="center">
+      <v-text-field
+        label="Heslo"
+        v-model="newPassword"
+        required
+        outlined
+        filled
+        clearable
+        :rules="[value => !!value]"
+        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+        :type="showPassword ? 'text' : 'password'"
+        @click:append="showPassword = !showPassword"
+      />
+      <v-text-field
+        label="Heslo znovu"
+        v-model="newPasswordCheck"
+        outlined
+        required
+        filled
+        clearable
+      ></v-text-field>
+    </v-row>
     <v-row justify="center">
       <v-btn
         @click="emitEvents"

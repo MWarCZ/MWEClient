@@ -4,6 +4,7 @@
     <template v-for="(member, index) in members">
 
       <v-list-item :key="`member-${index}`">
+        <slot name="prepend-item-logo" :member="member"></slot>
         <v-list-item-action>
           <v-tooltip bottom>
 
@@ -17,10 +18,13 @@
 
           </v-tooltip>
         </v-list-item-action>
+        <slot name="append-item-logo" :member="member"></slot>
 
         <v-list-item-content v-if="member.user">
           <v-list-item-title>
+            <slot name="prepend-item-title" :member="member"></slot>
             [<b>{{member.user.login}}</b>] {{member.user.lastName}} {{member.user.firstName}}
+            <slot name="append-item-title" :member="member"></slot>
           </v-list-item-title>
         </v-list-item-content>
 

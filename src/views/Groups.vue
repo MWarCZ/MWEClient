@@ -40,7 +40,18 @@
           :members="group.members || []"
           :menuItems="memberMenuItems"
           @action="memberActionSwitch(group, $event)"
-          />
+        >
+          <template #append-item-title="{member}">
+            <v-tooltip bottom>
+              <template #activator="{on}">
+                <v-btn v-on="on" icon :to="`/users#${member.user.login}`">
+                  <v-icon>mdi-account-search</v-icon>
+                </v-btn>
+              </template>
+              <span>Přejit na uživatele '{{member.user.login}}'</span>
+            </v-tooltip>
+          </template>
+        </GMList>
 
       </template>
     </GList>

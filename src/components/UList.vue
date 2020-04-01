@@ -4,6 +4,7 @@
     <v-list-group
       v-for="(user, index) in users"
       :key="`user-${index}`"
+      :id="`${user.login}`"
       :class="{
         removed: user.removed,
         protected: user.protected,
