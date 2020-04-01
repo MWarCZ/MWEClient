@@ -136,19 +136,19 @@ import FullDialog from '../components/FullDialog'
 import YesNoDialog from '../components/YesNoDialog'
 
 // Query
-import gqlClient from '../graphql/Client.gql'
-import gqlGroups from '../graphql/Groups.gql'
-import gqlUsers from '../graphql/Users.gql'
+import gqlClient from '../graphql/auth/client.gql'
+import gqlGroups from '../graphql/group/groups.gql'
+import gqlUsers from '../graphql/user/users.gql'
 // Mutation group
-import gqlRemoveGroup from '../graphql/removeGroup.gql'
-import gqlRecoverGroup from '../graphql/recoverGroup.gql'
-import gqlCreateGroup from '../graphql/createGroup.gql'
-import gqlDeleteGroup from '../graphql/deleteGroup.gql'
-import gqlUpdateGroupInfo from '../graphql/updateGroupInfo.gql'
+import gqlRemoveGroup from '../graphql/group/removeGroup.gql'
+import gqlRecoverGroup from '../graphql/group/recoverGroup.gql'
+import gqlCreateGroup from '../graphql/group/createGroup.gql'
+import gqlDeleteGroup from '../graphql/group/deleteGroup.gql'
+import gqlUpdateGroupInfo from '../graphql/group/updateGroupInfo.gql'
 // Mutation member
-import gqlUpdateMember from '../graphql/updateMember.gql'
-import gqlAddMember from '../graphql/addMember.gql'
-import gqlRemoveMember from '../graphql/removeMember.gql'
+import gqlUpdateMember from '../graphql/member/updateMember.gql'
+import gqlAddMember from '../graphql/member/addMember.gql'
+import gqlRemoveMember from '../graphql/member/removeMember.gql'
 
 import { simulateLoading } from '../simulateLoading'
 

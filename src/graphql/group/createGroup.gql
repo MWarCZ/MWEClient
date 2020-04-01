@@ -1,4 +1,4 @@
-#import "./GroupFragment.gql"
+#import "../fragments/GroupFragment.gql"
 
 mutation createGroup($name: String!, $describe: String) {
   createGroup: createNewGroup(input:{name: $name, describe: $describe}) {

@@ -1,4 +1,4 @@
-#import "./UserFragment.gql"
+#import "../fragments/UserFragment.gql"
 
 query users {
   users {

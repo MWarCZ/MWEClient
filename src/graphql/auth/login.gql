@@ -1,4 +1,4 @@
-#import "./UserFragment.gql"
+#import "../fragments/UserFragment.gql"
 
 mutation login($login: String!, $password: String!, $expires: String) {
   login(input:{login: $login, password: $password, expires: $expires}) {

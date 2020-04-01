@@ -1,0 +1,11 @@
+#import "../fragments/GroupFragment.gql"
+#import "../fragments/GroupMembersFragment.gql"
+
+query groups {
+  groups {
+    ...group
+    members {
+      ...groupMember
+    }
+  }
+}

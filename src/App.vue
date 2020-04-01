@@ -112,10 +112,10 @@
 import Login from './components/Login'
 import gqlHello from './graphql/Hello.gql'
 import gqlHelloW from './graphql/HelloWorld.gql'
-import gqlClient from './graphql/Client.gql'
+import gqlClient from './graphql/auth/client.gql'
 // import gql from 'graphql-tag'
 import gqlConnected from './graphql/local/local.gql'
-import gqlLogin from './graphql/Login.gql'
+import gqlLogin from './graphql/auth/login.gql'
 import { onLogin, onLogout } from './vue-apollo'
 import FullDialog from './components/FullDialog'
 

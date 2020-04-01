@@ -1,5 +1,5 @@
-#import "./UserFragment.gql"
-#import "./UserMembershipFragment.gql"
+#import "../fragments/UserFragment.gql"
+#import "../fragments/UserMembershipFragment.gql"
 
 query client {
   client: user {

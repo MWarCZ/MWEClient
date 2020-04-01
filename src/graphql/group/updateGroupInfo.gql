@@ -1,4 +1,4 @@
-#import "./GroupFragment.gql"
+#import "../fragments/GroupFragment.gql"
 
 mutation updateGroupInfo($name: String!, $describe: String!) {
   updateGroupInfo(filter: {name: $name}, input: {describe: $describe}) {

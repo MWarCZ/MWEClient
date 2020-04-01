@@ -1,4 +1,4 @@
-#import "./GroupFragment.gql"
+#import "../fragments/GroupFragment.gql"
 
 mutation recoverGroup($name: String, $id: Int) {
   recoverGroup(filter:{name:$name, id: $id}) {

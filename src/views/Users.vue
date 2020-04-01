@@ -42,8 +42,8 @@ import UEditor from '../components/UEditor.vue'
 import FullDialog from '../components/FullDialog'
 
 // Query
-import gqlClient from '../graphql/Client.gql'
-import gqlUsers from '../graphql/Users.gql'
+import gqlClient from '../graphql/auth/client.gql'
+import gqlUsers from '../graphql/user/users.gql'
 
 /** @typedef MenuItem
  *  @type { {icon:string, title:string, action:string} }

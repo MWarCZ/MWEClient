@@ -1,5 +1,5 @@
-#import "./GroupFragment.gql"
-#import "./GroupMembersFragment.gql"
+#import "../fragments/GroupFragment.gql"
+#import "../fragments/GroupMembersFragment.gql"
 
 mutation addMember($name: String!, $login: String!) {
   addMember(

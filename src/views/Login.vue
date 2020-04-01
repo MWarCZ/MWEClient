@@ -9,7 +9,7 @@
 <script>
 // @ is an alias to /src
 import Login from '@/components/Login.vue'
-import gqlClient from '../graphql/Client.gql'
+import gqlClient from '../graphql/auth/client.gql'
 
 export default {
   name: 'LoginView',

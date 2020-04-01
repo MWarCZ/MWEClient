@@ -1,4 +1,4 @@
-#import "./GroupMembersFragment.gql"
+#import "../fragments/GroupMembersFragment.gql"
 
 mutation updateMember(
     $name: String!, $login:String!, 
