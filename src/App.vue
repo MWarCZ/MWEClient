@@ -1,7 +1,8 @@
 <template>
   <v-app>
-    <!-- <v-navigation-drawer app>
-    </v-navigation-drawer> -->
+    <v-navigation-drawer app>
+
+    </v-navigation-drawer>
 
     <v-app-bar
       app
@@ -62,6 +63,7 @@
           <v-tab to="/about">About</v-tab>
           <v-tab to="/groups">Groups</v-tab>
           <v-tab to="/users">Users</v-tab>
+          <v-tab to="/processtemplates">Šablony procesů</v-tab>
           <v-tab to="/login">Login</v-tab>
         </v-tabs>
       </template>

@@ -1,4 +1,4 @@
-fragment groupMember on Member {
+fragment GroupMembersFragment on Member {
   user {
     id
     firstName

@@ -2,6 +2,6 @@
 
 mutation recoverGroup($name: String, $id: Int) {
   recoverGroup(filter:{name:$name, id: $id}) {
-    ...group
+    ...GroupFragment
   }
 }

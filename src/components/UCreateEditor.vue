@@ -11,7 +11,7 @@
         outlined
         required
         filled
-        clearable
+        :rules="[value => !!value]"
         :hint="readonlyLogin?'Login není možné upravit.':''"
       ></v-text-field>
     </v-row>
@@ -22,7 +22,6 @@
         outlined
         required
         filled
-        clearable
       ></v-text-field>
       <v-text-field
         label="Příjmení"
@@ -30,7 +29,6 @@
         outlined
         required
         filled
-        clearable
       ></v-text-field>
     </v-row>
     <v-row justify="center">
@@ -40,17 +38,6 @@
         outlined
         required
         filled
-        clearable
-      ></v-text-field>
-    </v-row>
-    <v-row justify="center">
-      <v-text-field
-        label="Heslo"
-        v-model="newPassword"
-        outlined
-        required
-        filled
-        clearable
       ></v-text-field>
     </v-row>
     <v-row justify="center">
@@ -60,19 +47,21 @@
         required
         outlined
         filled
-        clearable
         :rules="[value => !!value]"
         :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
         :type="showPassword ? 'text' : 'password'"
         @click:append="showPassword = !showPassword"
       />
+    </v-row>
+    <v-row justify="center">
       <v-text-field
         label="Heslo znovu"
         v-model="newPasswordCheck"
         outlined
         required
         filled
-        clearable
+        :type="showPassword ? 'text' : 'password'"
+        :rules="[value => value === newPassword, value => value.length > 0]"
       ></v-text-field>
     </v-row>
     <v-row justify="center">
@@ -115,14 +104,20 @@ export default {
       type: String,
       default: 'Odeslat',
     },
+    cleanOnSuccess: Boolean,
+    cleanOnFail: Boolean,
   },
   data () {
     return {
       valid: false,
+      showPassword: false,
+
       newLogin: this.login,
       newFirstName: this.firstName,
       newLastName: this.lastName,
       newEmail: this.email,
+      newPassword: '',
+      newPasswordCheck: '',
     }
   },
   methods: {
@@ -132,14 +127,31 @@ export default {
         firstName: this.newFirstName,
         lastName: this.newLastName,
         email: this.newEmail,
+        password: this.newPassword,
       }
       this.$emit('submit', payload)
       if (this.valid) {
         this.$emit('success', payload)
-        this.login = this.firstName = this.lastName = this.email = ''
+        if (this.cleanOnSuccess) {
+          this.restart()
+        }
       } else {
         this.$emit('fail', payload)
+        if (this.cleanOnFail) {
+          this.restart()
+        }
       }
+    },
+    clean () {
+      this.newLogin = this.newFirstName = this.newLastName = this.newEmail = ''
+      this.newPassword = this.newPasswordCheck = ''
+    },
+    restart () {
+      this.newLogin = this.login
+      this.newFirstName = this.firstName
+      this.newLastName = this.lastName
+      this.newEmail = this.email
+      this.newPassword = this.newPasswordCheck = ''
     },
   },
 

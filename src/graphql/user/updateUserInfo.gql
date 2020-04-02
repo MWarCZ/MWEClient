@@ -1,0 +1,15 @@
+#import "../fragments/UserFragment.gql"
+
+mutation updateUser(
+    $login: String!
+    $email: String,
+    $firstName: String,
+    $lastName: String,
+) {
+    updateUserInfo(
+        input: {email: $email, firstName: $firstName, lastName: $lastName}, 
+        filter: {login: $login}
+    ) {
+        ...UserFragment
+    }
+}

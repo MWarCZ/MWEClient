@@ -11,6 +11,7 @@
         outlined
         required
         filled
+        :rules="[value=>!!value]"
         :hint="readonlyName?'Název není možné upravit.':''"
       ></v-text-field>
     </v-row>
@@ -57,6 +58,8 @@ export default {
       type: String,
       default: 'Odeslat',
     },
+    cleanOnSuccess: Boolean,
+    cleanOnFail: Boolean,
   },
   data () {
     return {
@@ -74,10 +77,19 @@ export default {
       this.$emit('submit', payload)
       if (this.valid) {
         this.$emit('success', payload)
-        this.newName = this.newDescribe = ''
+        if (this.cleanOnSuccess) {
+          this.restart()
+        }
       } else {
         this.$emit('fail', payload)
+        if (this.cleanOnFail) {
+          this.restart()
+        }
       }
+    },
+    restart () {
+      this.newName = this.name
+      this.newDescribe = this.describe
     },
   },
 

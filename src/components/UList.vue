@@ -6,22 +6,24 @@
       :key="`user-${index}`"
       :id="`${user.login}`"
       :class="{
-        removed: user.removed,
         protected: user.protected,
+        removed: user.removed,
         locked: user.locked,
         normal: !user.removed && !user.protected && !user.locked,
       }"
       :ripple="false"
       append-icon=""
+      color=""
     >
       <template #activator>
 
         <v-list-item-action>
           <v-tooltip bottom>
             <template #activator="{on}">
+              <v-icon v-on="on" v-show="user.locked">mdi-lock</v-icon>
+
               <v-icon v-on="on" v-if="user.protected">mdi-shield</v-icon>
               <v-icon v-on="on" v-else-if="user.removed">mdi-account-off-outline</v-icon>
-              <v-icon v-on="on" v-else-if="user.locked">mdi-lock</v-icon>
               <v-icon v-on="on" v-else>mdi-account</v-icon>
             </template>
             <span v-if="user.protected">Uživatel je chráněn před úpravami.</span>
@@ -93,14 +95,14 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+  .locked {
+    background-color: #9e9e9e3b;
+  }
   .removed {
     background-color: #ff00002e;
   }
   .protected {
     background-color: #3f3fb53b;
-  }
-  .locked {
-    background-color: #9e9e9e3b;
   }
   .normal {
     background-color: #3fb53f3b;

@@ -3,9 +3,9 @@
 
 query groups {
   groups {
-    ...group
+    ...GroupFragment
     members {
-      ...groupMember
+      ...GroupMembersFragment
     }
   }
 }

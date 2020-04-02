@@ -7,9 +7,9 @@ mutation addMember($name: String!, $login: String!) {
       group: {name: $name}, 
       user: {login: $login}
     }) {
-    ...groupMember
+    ...GroupMembersFragment
     group {
-      ...group
+      ...GroupFragment
     }
   }
 }

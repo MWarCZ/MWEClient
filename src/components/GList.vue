@@ -11,6 +11,7 @@
       }"
       :ripple="false"
       append-icon=""
+      color=""
     >
       <template #activator>
 

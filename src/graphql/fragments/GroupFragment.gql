@@ -1,4 +1,4 @@
-fragment group on Group {
+fragment GroupFragment on Group {
   id
   name
   describe

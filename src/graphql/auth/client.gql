@@ -3,9 +3,9 @@
 
 query client {
   client: user {
-    ...user
+    ...UserFragment
     membership {
-      ...userMembership
+      ...UserMembershipFragment
     }
   }
 }

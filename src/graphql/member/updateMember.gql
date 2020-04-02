@@ -8,6 +8,6 @@ mutation updateMember(
         filter: {group: {name: $name},user:{login: $login}},
         input: {addMember: $addMember, removeMember: $removeMember, showMembers: $showMembers}) 
     {
-    ...groupMember
+    ...GroupMembersFragment
     }
 }

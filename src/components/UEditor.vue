@@ -105,10 +105,26 @@ export default {
       this.$emit('submit', payload)
       if (this.valid) {
         this.$emit('success', payload)
-        this.login = this.firstName = this.lastName = this.email = ''
+        if (this.cleanOnSuccess) {
+          this.restart()
+        }
       } else {
         this.$emit('fail', payload)
+        if (this.cleanOnFail) {
+          this.restart()
+        }
       }
+    },
+    clean () {
+      this.newLogin = this.newFirstName = this.newLastName = this.newEmail = ''
+      this.newPassword = this.newPasswordCheck = ''
+    },
+    restart () {
+      this.newLogin = this.login
+      this.newFirstName = this.firstName
+      this.newLastName = this.lastName
+      this.newEmail = this.email
+      this.newPassword = this.newPasswordCheck = ''
     },
   },
 

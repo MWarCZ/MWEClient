@@ -2,6 +2,6 @@
 
 mutation updateGroupInfo($name: String!, $describe: String!) {
   updateGroupInfo(filter: {name: $name}, input: {describe: $describe}) {
-    ...group
+    ...GroupFragment
   }
 }

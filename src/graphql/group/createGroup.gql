@@ -2,6 +2,6 @@
 
 mutation createGroup($name: String!, $describe: String) {
   createGroup: createNewGroup(input:{name: $name, describe: $describe}) {
-  	...group
+  	...GroupFragment
   }
 }

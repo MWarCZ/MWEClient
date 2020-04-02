@@ -1,0 +1,19 @@
+#import "../fragments/UserFragment.gql"
+
+mutation createUser(
+    $login: String!,
+    $password: String!,
+    $email: String,
+    $firstName: String,
+    $lastName: String,
+) {
+    createUser: createNewUser(input: {
+        login: $login, 
+        password: $password, 
+        email: $email, 
+        firstName: $firstName, 
+        lastName: $lastName
+    }) {
+        ...UserFragment
+    }
+}
