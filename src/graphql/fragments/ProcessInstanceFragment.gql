@@ -1,0 +1,6 @@
+fragment ProcessInstanceFragment on ProcessInstance {
+    id
+    startDateTime
+    endDateTime
+    status
+}

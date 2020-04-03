@@ -1,10 +1,100 @@
 <template>
   <v-container>
-    xxx
+    <PTList
+      :processTemplates="processTemplates"
+      :menuItems="[]"
+      @action="processTemplateActionSwitch"
+    >
+    </PTList>
+
+    <v-tooltip left>
+      <template #activator="{on}">
+        <v-btn
+          fab
+          color="primary"
+          v-on="on"
+          fixed
+          right
+          bottom
+          x-large
+          @click="openUploadProcessDialog()"
+        > <v-icon x-large>mdi-plus</v-icon> </v-btn>
+      </template>
+      <span>Nahrát šablonu procesu.</span>
+    </v-tooltip>
+
+    <FullDialog v-model="uploadProcessDialog" title="Nahrát šablonu procesu" closeable>
+      <v-container>
+        <v-alert type="error" :value="!!msgError">
+          {{msgError}}
+        </v-alert>
+        <PTUploader></PTUploader>
+      </v-container>
+    </FullDialog>
+
+    <YesNoDialog v-model="ynDialog" :title="ynTitle"
+      :loading="actionWaiting"
+      @yes="ynActionYes" @no="ynActionNo"
+    >
+      <v-alert type="error" :value="!!msgError">
+        {{msgError}}
+      </v-alert>
+    </YesNoDialog>
+
   </v-container>
 </template>
 <script>
-export default {
+import PTList from '../components/PTList.vue'
+import PTUploader from '../components/PTUploader'
+import FullDialog from '../components/FullDialog'
+import YesNoDialog from '../components/YesNoDialog'
 
+// import { simulateLoading } from '../simulateLoading'
+
+const gql = {
+  client: require('../graphql/auth/client.gql'),
+  // processTemplates
+  processTemplates: require('../graphql/bpmn/processTemplates.gql'),
+  uploadProcess: require('../graphql/bpmn/uploadProcess.gql'),
+  initProcess: require('../graphql/bpmn/initProcess.gql'),
+}
+export default {
+  components: {
+    YesNoDialog, FullDialog, PTList, PTUploader,
+  },
+  data () {
+    return {
+      processTemplates: [],
+
+      uploadProcessDialog: false,
+
+      selectedProcessTemplate: null,
+
+      msgError: '',
+      actionWaiting: false,
+
+      ynDialog: false,
+      ynTitle: '',
+      ynActionYes: () => {},
+      ynActionNo: () => { this.closeYNDialog() },
+    }
+  },
+  apollo: {
+    processTemplates: {
+      query: gql.processTemplates,
+    },
+  },
+  methods: {
+    log () {
+      console.log(gql)
+    },
+    processTemplateActionSwitch (...args) {
+      console.log(args)
+    },
+    openUploadProcessDialog () {
+      this.msgError = ''
+      this.uploadProcessDialog = true
+    },
+  },
 }
 </script>

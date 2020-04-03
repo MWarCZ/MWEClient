@@ -37,9 +37,7 @@
 
         <slot name="append-group" :group="group" />
       </template>
-      <v-container>
         <slot name="extend-group" :group="group" />
-      </v-container>
 
     </v-list-group>
   </v-list>
