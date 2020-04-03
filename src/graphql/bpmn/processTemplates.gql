@@ -1,0 +1,7 @@
+#import "../fragments/ProcessTemplateFragment.gql"
+
+query processTemplates {
+    processTemplates {
+        ...ProcessTemplateFragment
+    }
+}

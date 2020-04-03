@@ -1,0 +1,7 @@
+#import "../fragments/ProcessTemplateFragment.gql"
+
+mutation uploadProcess($xml: String!) {
+    uploadProcess(xml:$xml) {
+        ...ProcessTemplateFragment
+    }
+}

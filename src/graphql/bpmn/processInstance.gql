@@ -1,0 +1,7 @@
+#import "../fragments/ProcessInstanceFragment.gql"
+
+query processInstance($id: Int!) {
+    processInstance(filter: {id: $id}) {
+        ...ProcessInstanceFragment
+    }
+}

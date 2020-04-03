@@ -28,7 +28,10 @@
         <v-alert type="error" :value="!!msgError">
           {{msgError}}
         </v-alert>
-        <PTUploader></PTUploader>
+        <PTUploader :key="`dialog-${uploadProcessDialog}`"
+          :loading="actionWaiting"
+          @success="tryUploadProcess"
+        ></PTUploader>
       </v-container>
     </FullDialog>
 
@@ -49,7 +52,7 @@ import PTUploader from '../components/PTUploader'
 import FullDialog from '../components/FullDialog'
 import YesNoDialog from '../components/YesNoDialog'
 
-// import { simulateLoading } from '../simulateLoading'
+import { simulateLoading } from '../simulateLoading'
 
 const gql = {
   client: require('../graphql/auth/client.gql'),
@@ -94,6 +97,51 @@ export default {
     openUploadProcessDialog () {
       this.msgError = ''
       this.uploadProcessDialog = true
+    },
+
+    // Funkce s pokusem o provedeni funkce
+    async tryActionWrapper (asyncFn, args = []) {
+      this.actionWaiting = true
+      try {
+        await asyncFn(...args)
+      } catch (e) {
+        this.msgError = (e.message) ? e.message : 'Nepodarilo se.'
+        console.error(e)
+      }
+      this.actionWaiting = false
+    },
+
+    tryUploadProcess ({ bpmnText }) {
+      return this.tryActionWrapper(async () => {
+        await this.uploadProcess({ xml: bpmnText })
+        this.uploadProcessDialog = false
+        this.msgError = ''
+      })
+    },
+
+    async uploadProcess ({ xml }) {
+      console.warn('TODO: uploadProcess')
+      await simulateLoading()
+      await this.$apollo.mutate({
+        mutation: gql.uploadProcess,
+        variables: {
+          xml,
+        },
+        update (proxy, { data: { uploadProcess } }) {
+          console.log(uploadProcess)
+          if (uploadProcess) {
+            const data = proxy.readQuery({
+              query: gql.processTemplates,
+            })
+            // createUser.membership = []
+            data.processTemplates.push(...uploadProcess)
+            proxy.writeQuery({
+              query: gql.processTemplates,
+              data: data,
+            })
+          } // if (uploadProcess)
+        },
+      })
     },
   },
 }

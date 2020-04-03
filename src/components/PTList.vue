@@ -18,11 +18,15 @@
           </v-tooltip>
         </v-list-item-action>
         <v-list-item-content>
-          <v-list-item-title>xxx</v-list-item-title>
-          <v-list-item-subtitle>xxx</v-list-item-subtitle>
+            <v-list-item-title>Název: {{process.name}}</v-list-item-title>
+            <v-list-item-subtitle>Id: {{process.bpmnId}}</v-list-item-subtitle>
+        </v-list-item-content>
+        <v-list-item-content>
+            <v-list-item-title>ID: <i>{{process.bpmnId}}</i> </v-list-item-title>
+            <v-list-item-title>Verze: {{process.version}}</v-list-item-title>
         </v-list-item-content>
       </template>
-      <slot name="extend-process" :processTemplate="processTemplate" />
+      <slot name="extend-process" :processTemplate="process" />
     </v-list-group>
   </v-list>
 

@@ -1,0 +1,7 @@
+#import "../fragments/ProcessInstanceFragment.gql"
+
+mutation initProcess($idProcessTemplate: Int!, $idNodeTemplate: Int!) {
+    initProcess(input: {idProcess: $idProcessTemplate, idFirstNode: $idNodeTemplate}) {
+        ...ProcessInstanceFragment
+    }
+}
