@@ -43,10 +43,14 @@
       </v-file-input>
     </v-row>
     <v-row justify="center">
-      <v-container>
-        <PrismEditor v-if="selectedHelper && selectedHelper.includes('update')"
+      <v-container v-if="selectedHelper">
+        <PrismEditor v-if="selectedHelper.includes('update')"
           v-model="newBpmnText"
           language="vue"
+        />
+        <VueBpmn v-if="selectedHelper.includes('show')" :key="bpmnUrl"
+          :url="bpmnUrl"
+          class="bpmnio"
         />
       </v-container>
     </v-row>
@@ -69,9 +73,13 @@ import 'prismjs'
 // import 'prismjs/themes/prism.css'
 import 'prismjs/themes/prism-okaidia.css'
 import PrismEditor from 'vue-prism-editor'
+
+import VueBpmn from 'vue-bpmn'
+
 export default {
   components: {
     PrismEditor,
+    VueBpmn,
   },
   props: {
     loading: Boolean,
@@ -85,12 +93,20 @@ export default {
   data () {
     return {
       valid: false,
-      selectedHelper: [],
+      selectedHelper: ['show'],
 
       bpmnFile: undefined,
       bpmnText: '',
       newBpmnText: '',
+      bpmnUrl: '',
     }
+  },
+  watch: {
+    newBpmnText: {
+      handler (newValue, oldValue) {
+        this.loadUrlFromText(newValue)
+      },
+    },
   },
   methods: {
     emitEvents () {
@@ -112,24 +128,44 @@ export default {
     },
     restart () {
       this.bpmnFile = undefined
+      this.bpmnUrl = ''
       this.newBpmnText = this.bpmnText = ''
     },
     log (...args) {
       console.warn(args)
     },
-    loadTextFromFile (file) {
-      // console.log(file)
-      this.readFile(file).then(text => {
-        this.newBpmnText = this.bpmnText = text
-      }).catch(e => {
-        this.newBpmnText = this.bpmnText = `ERROR:\n${e}`
-      })
+
+    loadUrlFromText (text) {
+      return this.fileToUrl(this.textToFile(text))
+        .then(url => {
+          this.bpmnUrl = url
+          return url
+        })
     },
-    readFile (file) {
+
+    loadTextFromFile (file) {
+      this.fileToText(file)
+        .then(text => {
+          this.newBpmnText = this.bpmnText = text
+        }).catch(e => {
+          this.newBpmnText = this.bpmnText = `ERROR:\n${e}`
+        })
+    },
+    fileToText (file) {
       return new Promise((resolve) => {
         const reader = new FileReader()
         reader.onload = e => resolve(e.target.result)
         reader.readAsText(file)
+      })
+    },
+    textToFile (text) {
+      return new Blob([text])
+    },
+    fileToUrl (file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader()
+        reader.onload = e => resolve(e.target.result)
+        reader.readAsDataURL(file)
       })
     },
   },
@@ -137,13 +173,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .removed {
-    background-color: #ff00002e;
-  }
-  .protected {
-    background-color: #3f3fb53b;
-  }
-  .normal {
-    background-color: #3fb53f3b;
+  .bpmnio {
+    min-height: 400px;
+    background-color: #fff;
+    border: 1px solid black;
+
   }
 </style>
