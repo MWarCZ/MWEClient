@@ -16,48 +16,15 @@
           <v-list-item-content></v-list-item-content>
         </v-list-item> -->
 
-        <v-list-item to="/">
+        <v-list-item
+          v-for="(item, index) in appMenuItems"
+          :key="`appmenuitem-${index}`"
+          :to="item.link">
           <v-list-item-icon>
-            <v-icon>mdi-home</v-icon>
+            <v-icon>{{item.icon}}</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title>Home</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-list-item to="/groups">
-          <v-list-item-icon>
-            <v-icon>mdi-account-group</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Skupiny</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-list-item to="/users">
-          <v-list-item-icon>
-            <v-icon>mdi-account-multiple</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Uživatele</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-list-item to="/processtemplates">
-          <v-list-item-icon>
-            <v-icon>mdi-book-multiple</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Šablony procesů</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-list-item to="/login">
-          <v-list-item-icon>
-            <v-icon>mdi-key</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Login</v-list-item-title>
+            <v-list-item-title>{{item.title}}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -206,6 +173,40 @@ export default {
       authAlertType: 'error',
       checkLoginInLoop: false,
       miniMenu: true,
+
+      /** @type {{icon: string, title: string, link: string}[]} */
+      appMenuItems: [
+        {
+          link: '/',
+          title: 'Home',
+          icon: 'mdi-home',
+        },
+        {
+          link: '/groups',
+          title: 'Skupiny',
+          icon: 'mdi-account-group',
+        },
+        {
+          link: '/users',
+          title: 'Uživatele',
+          icon: 'mdi-account-multiple',
+        },
+        {
+          link: '/processtemplates',
+          title: 'Šablony procesů',
+          icon: 'mdi-book-multiple',
+        },
+        {
+          link: '/processinstances',
+          title: 'Instance procesů',
+          icon: 'mdi-book-multiple',
+        },
+        {
+          link: '/login',
+          title: 'Login',
+          icon: 'mdi-key',
+        },
+      ],
     }
   },
   created () {

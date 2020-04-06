@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import Groups from '../views/Groups.vue'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
+import ProcessInstances from '../views/ProcessInstances.vue'
 import ProcessTemplates from '../views/ProcessTemplates.vue'
 import Users from '../views/Users.vue'
 
@@ -42,6 +43,11 @@ const routes = [
     path: '/processtemplates',
     name: 'ProcessTemplates',
     component: ProcessTemplates,
+  },
+  {
+    path: '/processinstances',
+    name: 'ProcessInstances',
+    component: ProcessInstances,
   },
 ]
 

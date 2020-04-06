@@ -5,6 +5,14 @@
       :menuItems="[]"
       @action="processTemplateActionSwitch"
     >
+      <template #extend-process="{ processTemplate }">
+        <v-container v-if="processTemplate.isExecutable && processTemplate.nodeElements">
+          <NTList :nodeTemplates="processTemplate.nodeElements"
+            :menuItems="nodeMenuItems"
+            @action="nodeTemplateActionSwitch({...$event, processTemplate})"
+          ></NTList>
+        </v-container>
+      </template>
     </PTList>
 
     <v-tooltip left>
@@ -48,6 +56,7 @@
 </template>
 <script>
 import PTList from '../components/PTList.vue'
+import NTList from '../components/NTList.vue'
 import PTUploader from '../components/PTUploader'
 import FullDialog from '../components/FullDialog'
 import YesNoDialog from '../components/YesNoDialog'
@@ -57,13 +66,17 @@ import { simulateLoading } from '../simulateLoading'
 const gql = {
   client: require('../graphql/auth/client.gql'),
   // processTemplates
-  processTemplates: require('../graphql/bpmn/processTemplates.gql'),
+  processTemplates: require('../graphql/bpmn/processTemplates_NTStart.gql'),
   uploadProcess: require('../graphql/bpmn/uploadProcess.gql'),
   initProcess: require('../graphql/bpmn/initProcess.gql'),
 }
+/** @typedef MenuItem
+ *  @type { {icon:string, title:string, action:string} }
+ */
+
 export default {
   components: {
-    YesNoDialog, FullDialog, PTList, PTUploader,
+    YesNoDialog, FullDialog, PTList, PTUploader, NTList,
   },
   data () {
     return {
@@ -80,6 +93,13 @@ export default {
       ynTitle: '',
       ynActionYes: () => {},
       ynActionNo: () => { this.closeYNDialog() },
+
+      /** @type MenuItem[] */
+      nodeMenuItems: [{
+        icon: 'mdi-play-circle-outline',
+        title: 'Spustit zde',
+        action: 'init',
+      }],
     }
   },
   apollo: {
@@ -93,6 +113,33 @@ export default {
     },
     processTemplateActionSwitch (...args) {
       console.log(args)
+    },
+    nodeTemplateActionSwitch (action) {
+      console.log(action.item.action, action)
+      switch (action.item.action) {
+        case 'init':
+          this.openYNDialog()
+          this.ynTitle = `Chcete spustit proces '${action.processTemplate.name}' na události '${action.nodeTemplate.name}'?`
+          this.ynActionYes = () => {
+            this.tryActionWrapper(async () => {
+              await this.initProcess({
+                idProcessTemplate: action.processTemplate.id,
+                idNodeTemplate: action.nodeTemplate.id,
+              })
+              this.closeYNDialog()
+            })
+          }
+          break
+      }
+    },
+
+    openYNDialog () {
+      this.msgError = ''
+      this.ynDialog = true
+    },
+    closeYNDialog () {
+      this.msgError = ''
+      this.ynDialog = false
     },
     openUploadProcessDialog () {
       this.msgError = ''
@@ -140,6 +187,17 @@ export default {
               data: data,
             })
           } // if (uploadProcess)
+        },
+      })
+    },
+
+    async initProcess ({ idProcessTemplate, idNodeTemplate }) {
+      console.warn('TODO: initProcess')
+      await simulateLoading()
+      await this.$apollo.mutate({
+        mutation: gql.initProcess,
+        variables: {
+          idProcessTemplate, idNodeTemplate,
         },
       })
     },

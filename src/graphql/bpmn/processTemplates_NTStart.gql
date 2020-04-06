@@ -1,8 +1,8 @@
 #import "../fragments/ProcessTemplateFragment.gql"
 #import "../fragments/NodeTemplateFragment.gql"
 
-mutation uploadProcess($xml: String!) {
-    uploadProcess(xml:$xml) {
+query processTemplates_NTStart {
+    processTemplates {
         nodeElements(filter: {
             implementationContains: "startevent"
         }) {

@@ -112,6 +112,7 @@ export default {
     emitEvents () {
       const payload = {
         bpmnText: this.newBpmnText,
+        bpmnUrl: this.bpmnUrl,
       }
       this.$emit('submit', payload)
       if (this.valid) {

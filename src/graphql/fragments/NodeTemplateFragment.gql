@@ -1,0 +1,7 @@
+fragment NodeTemplateFragment on NodeElementTemplate {
+    id
+    bpmnId
+    name
+    implementation
+    candidateAssignee
+}
