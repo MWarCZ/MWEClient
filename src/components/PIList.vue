@@ -6,6 +6,7 @@
       :ripple="false"
       append-icon=""
       color=""
+      :class="getClassByProcessStatus(process.status)"
     >
       <template #activator>
         <v-list-item-action>
@@ -101,8 +102,10 @@ export default {
       const title = `Stav: ${status}`
       switch (status) {
         case ProcessStatus.Withdrawn:
-          return { icon: 'mdi-circle-off', title }
+          return { icon: 'mdi-circle-off-outline', title }
 
+        case ProcessStatus.Ready:
+          return { icon: 'mdi-arrow-right-drop-circle-outline', title }
         case ProcessStatus.Active:
           return { icon: 'mdi-arrow-right-drop-circle', title }
 
@@ -124,6 +127,39 @@ export default {
         default: return { icon: 'mdi-comment-question-outline', title }
       }
     },
+    getClassByProcessStatus (status) {
+      switch (status) {
+        case ProcessStatus.Withdrawn:
+          return ''
+        case ProcessStatus.Ready:
+        case ProcessStatus.Active:
+          return 'active'
+        case ProcessStatus.Completing:
+        case ProcessStatus.Completed:
+          return 'completed'
+        case ProcessStatus.Falling:
+        case ProcessStatus.Failled:
+          return 'failled'
+        case ProcessStatus.Terminating:
+        case ProcessStatus.Terminated:
+        default: return 'other'
+      }
+    },
   },
 }
 </script>
+
+<style lang="scss" scoped>
+  .other {
+    background-color: #9e9e9e3b;
+  }
+  .completed {
+    background-color: #3f3fb53b;
+  }
+  .failled {
+    background-color: #ff00002e;
+  }
+  .active {
+    background-color: #3fb53f3b;
+  }
+</style>

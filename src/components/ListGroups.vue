@@ -9,6 +9,7 @@
         :class="{removed: group.removed, protected: group.protected}"
         :ripple="false"
         append-icon=""
+        multiple
       >
         <template v-slot:activator>
           <v-list-item-action>

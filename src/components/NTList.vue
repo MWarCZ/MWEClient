@@ -29,6 +29,8 @@
             <v-list-item-subtitle>{{node.candidateAssignee}}</v-list-item-subtitle>
         </v-list-item-content>
 
+        <slot name="append-node" :nodeTemplate="node" />
+
         <DotMenu :items="menuItems" @select="emitAction($event, node)" />
 
       </template>
@@ -52,10 +54,10 @@ export default {
     /**
      * @type new => {
      *  id: number,
-     *  bpmnId: string
-     *  name: string
-     *  implementation: string
-     *  candidateAssignee: string
+     *  bpmnId: string,
+     *  name: string,
+     *  implementation: string,
+     *  candidateAssignee: string,
      * }[]
      */
     nodeTemplates: {

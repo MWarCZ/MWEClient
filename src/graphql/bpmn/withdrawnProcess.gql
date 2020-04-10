@@ -1,0 +1,9 @@
+#import "../fragments/ProcessInstanceFragment.gql"
+
+mutation withdrawnProcess(
+    $idPI: Int!, 
+) {
+    withdrawnProcess(idPI: $idPI) {
+        ...ProcessInstanceFragment
+    }
+}

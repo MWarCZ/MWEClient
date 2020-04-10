@@ -19,14 +19,15 @@
             <span v-if="process.isExecutable">Proces je možné spustit.</span>
             <span v-else>Proces není možné spustit.</span>
           </v-tooltip>
+          <span>{{process.id}}</span>
         </v-list-item-action>
         <v-list-item-content>
             <v-list-item-title>{{(process.name)?process.name:'Nepojmenováno'}}</v-list-item-title>
-            <v-list-item-subtitle>{{process.id}}</v-list-item-subtitle>
+            <v-list-item-subtitle>{{process.candidateManager}}</v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-content>
             <v-list-item-title><b>ID:</b> <i>{{process.bpmnId}}</i> </v-list-item-title>
-            <v-list-item-title>Verze: {{process.version}}</v-list-item-title>
+            <v-list-item-title><b>Verze:</b> <i>{{process.version}}</i></v-list-item-title>
         </v-list-item-content>
 
         <DotMenu :items="menuItems" @select="emitAction($event, process)" />

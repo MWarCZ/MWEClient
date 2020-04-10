@@ -1,0 +1,4 @@
+
+mutation deleteProcessTemplate($idPT: Int!) {
+    deleteProcessTemplate(idPT: $idPT)
+}

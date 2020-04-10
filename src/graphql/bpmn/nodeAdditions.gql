@@ -1,6 +1,6 @@
 # NodeInstance
-mutation nodeAdditions($idNodeInstance: Int!, $json: String!) {
-    nodeAdditions(idNI: $idNodeInstance, json: $json) {
+mutation nodeAdditions($idNodeInstance: Int!, $inputArr:[NodeAdditionsInput!]! ) {
+    nodeAdditions(idNI: $idNodeInstance, input: $inputArr) {
         id
         data
     }

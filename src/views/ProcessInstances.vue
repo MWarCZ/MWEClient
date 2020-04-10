@@ -10,7 +10,7 @@
           <PIList
             :processInstances="processTemplate.instances"
             :menuItems="processInstanceMenuItems"
-            @action="1"
+            @action="processInstanceActionSwitch"
           ></PIList>
         </v-container>
       </template>
@@ -32,12 +32,14 @@ import PTList from '../components/PTList.vue'
 import PIList from '../components/PIList.vue'
 import YesNoDialog from '../components/YesNoDialog'
 
-// import { simulateLoading } from '../simulateLoading'
+import { simulateLoading } from '../simulateLoading'
 
 const gql = {
   client: require('../graphql/auth/client.gql'),
   // processTemplates
   processTemplates: require('../graphql/bpmn/processTemplates_PI.gql'),
+  deleteProcessInstance: require('../graphql/bpmn/deleteProcessInstance.gql'),
+  withdrawnProcess: require('../graphql/bpmn/withdrawnProcess.gql'),
 }
 /** @typedef MenuItem
  *  @type { {icon:string, title:string, action:string} }
@@ -62,7 +64,18 @@ export default {
       ynActionNo: () => { this.closeYNDialog() },
 
       /** @type MenuItem[] */
-      processInstanceMenuItems: [],
+      processInstanceMenuItems: [
+        {
+          icon: 'mdi-undo-variant',
+          title: 'Stáhnout/Přerušit',
+          action: 'withdrawn',
+        },
+        {
+          icon: 'mdi-delete-forever',
+          title: 'Smazat',
+          action: 'delete',
+        },
+      ],
     }
   },
   apollo: {
@@ -87,19 +100,26 @@ export default {
     processInstanceActionSwitch (action) {
       console.log(action.item.action, action)
       switch (action.item.action) {
-        // case 'init':
-        //   this.openYNDialog()
-        //   this.ynTitle = `Chcete spustit proces '${action.processTemplate.name}' na události '${action.nodeTemplate.name}'?`
-        //   this.ynActionYes = () => {
-        //     this.tryActionWrapper(async () => {
-        //       await this.initProcess({
-        //         idProcessTemplate: action.processTemplate.id,
-        //         idNodeTemplate: action.nodeTemplate.id,
-        //       })
-        //       this.closeYNDialog()
-        //     })
-        //   }
-        //   break
+        case 'delete':
+          this.openYNDialog()
+          this.ynTitle = `Chcete trvale smazat instanci procesu (${action.processInstance.id})?`
+          this.ynActionYes = () => {
+            this.tryActionWrapper(async () => {
+              await this.deleteProcess({ id: action.processInstance.id })
+              this.closeYNDialog()
+            })
+          }
+          break
+        case 'withdrawn':
+          this.openYNDialog()
+          this.ynTitle = `Chcete stáhnout/přerušit instanci procesu (${action.processInstance.id})?`
+          this.ynActionYes = () => {
+            this.tryActionWrapper(async () => {
+              await this.withdrawnProcess({ id: action.processInstance.id })
+              this.closeYNDialog()
+            })
+          }
+          break
       }
     },
 
@@ -126,6 +146,70 @@ export default {
         console.error(e)
       }
       this.actionWaiting = false
+    },
+
+    async deleteProcess ({ id }) {
+      console.warn('TODO: deleteProcessInstance')
+      await simulateLoading()
+      await this.$apollo.mutate({
+        mutation: gql.deleteProcessInstance,
+        variables: {
+          idPI: id,
+        },
+        update (proxy, { data: { deleteProcessInstance } }) {
+          console.log(deleteProcessInstance)
+          if (deleteProcessInstance) {
+            const data = proxy.readQuery({
+              query: gql.processTemplates,
+            })
+            data.processTemplates.forEach(processT => {
+              processT.instances.forEach((processI, index) => {
+                if (processI.id === id) {
+                  processT.instances.splice(index, 1)
+                }
+              })
+            })
+            proxy.writeQuery({
+              query: gql.processTemplates,
+              data: data,
+            })
+          } // if (deleteProcessInstance)
+        },
+      })
+    },
+
+    // Withdrawn
+    async withdrawnProcess ({ id }) {
+      console.warn('TODO: withdrawnProcess')
+      await simulateLoading()
+      await this.$apollo.mutate({
+        mutation: gql.withdrawnProcess,
+        variables: {
+          idPI: id,
+        },
+        update (proxy, { data: { withdrawnProcess } }) {
+          console.log(withdrawnProcess)
+          if (withdrawnProcess) {
+            const data = proxy.readQuery({
+              query: gql.processTemplates,
+            })
+            data.processTemplates.forEach(processT => {
+              processT.instances.forEach((processI, index) => {
+                if (processI.id === id) {
+                  processT.instances[index] = {
+                    ...processI,
+                    ...withdrawnProcess,
+                  }
+                }
+              })
+            })
+            proxy.writeQuery({
+              query: gql.processTemplates,
+              data: data,
+            })
+          } // if (deleteProcessInstance)
+        },
+      })
     },
 
   },

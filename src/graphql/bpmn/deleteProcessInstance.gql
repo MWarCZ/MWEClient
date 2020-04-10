@@ -1,0 +1,4 @@
+
+mutation deleteProcessInstance($idPI: Int!) {
+    deleteProcessInstance(idPI: $idPI)
+}

@@ -1,0 +1,19 @@
+#import "../fragments/ProcessTemplateFragment.gql"
+#import "../fragments/ProcessInstanceFragment.gql"
+#import "../fragments/NodeTemplateFragment.gql"
+#import "../fragments/NodeInstanceFragment.gql"
+
+query getPTs_PIs_NIs_NT {
+  processTemplates {
+    instances(filter:{status:"Active"}) {
+      nodeElements(filter:{status: "Waiting"}) {
+        template{
+          ...NodeTemplateFragment
+        }
+        ...NodeInstanceFragment
+      }
+      ...ProcessInstanceFragment
+    }
+    ...ProcessTemplateFragment
+  }
+}

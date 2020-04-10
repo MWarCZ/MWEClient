@@ -1,0 +1,11 @@
+#import "../fragments/ProcessTemplateFragment.gql"
+#import "../fragments/ProcessInstanceFragment.gql"
+
+query processTemplates_PI($status: String) {
+    processTemplates {
+        instances(filter:{status: $status}) {
+            ...ProcessInstanceFragment
+        }
+        ...ProcessTemplateFragment
+    }
+}

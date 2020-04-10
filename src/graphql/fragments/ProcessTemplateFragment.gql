@@ -6,4 +6,5 @@ fragment ProcessTemplateFragment on ProcessTemplate {
     versionType
     isExecutable
     processType
+    candidateManager
 }
