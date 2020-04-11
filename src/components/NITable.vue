@@ -5,6 +5,7 @@
       :items="nodes"
       item-key="id"
       :group-by="groupBy"
+      show-group-by
     >
       <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope">
         <slot :name="slot" v-bind="scope" :node="scope.item"/>

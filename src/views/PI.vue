@@ -2,6 +2,15 @@
   <v-container>
     <v-card>
       <v-container v-if="processInstance" >
+        <v-btn v-if="!webScope" color="info" @click="goToMore">
+          <v-icon>mdi-briefcase-search-outline</v-icon>
+          Zobrazit více
+        </v-btn>
+        <v-btn v-else color="info" @click="goToLess">
+          <v-icon>mdi-briefcase-search-outline</v-icon>
+          Zobrazit méně
+        </v-btn>
+
         <h3 class="display-1 text-center">Informace z instance procesu:</h3>
         <PIInfo :process="processInstance">
         </PIInfo>
@@ -9,19 +18,19 @@
         <h3 class="display-1 text-center">Informace ze šablony procesu:</h3>
         <PTInfo :process="processInstance.template" />
 
-        <v-expansion-panels focusable accordion multiple>
+        <v-expansion-panels v-model="expansionPanels"
+          focusable accordion multiple
+        >
           <v-expansion-panel>
             <v-expansion-panel-header>
-              <h3 class="display-1 text-center">Instance uzlů</h3>
+              <span v-if="webScope" class="display-1 text-center">Instance uzlů</span>
+              <span v-else class="display-1 text-center">Čekající instance uzlů</span>
+
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <NITable
                 :nodes="nodesProvider(processInstance.nodeElements)"
-                :prependHeaders="[{text: 'Ikona', value: 'xxx'}]"
-                :appendHeaders="[
-                  {text: 'Nabyvatel', value: 'assignee'},
-                  {text: 'Akce', value: 'action'},
-                ]"
+                :headers="NIHeaders"
               >
                 <template #item.xxx="{item}">
                   <NIIcon large :status="item.status"/>
@@ -73,12 +82,40 @@ export default {
       },
     },
   },
+  data () {
+    return {
+      NIHeaders: [
+        { text: 'Akce', value: 'action' },
+        { text: 'Ikona', value: 'xxx' },
+        { text: 'ID', value: 'id' },
+        { text: 'ID_T', value: 'template.id' },
+        { text: 'Název', value: 'template.name' },
+        { text: 'Typ', value: 'template.implementation' },
+        { text: 'Započetí', value: 'startDateTime' },
+        { text: 'Ukončení', value: 'endDateTime' },
+        { text: 'Nabyvatel', value: 'assignee' },
+        { text: 'Akce', value: 'action' },
+      ],
+      expansionPanels: [0],
+      webScope: this.$route.params.scope,
+    }
+  },
   methods: {
     nodesProvider (allNodes) {
-      if (this.$route.params.scope) {
+      if (this.webScope) {
         return allNodes
       }
       return allNodes.filter(node => ['Waiting'].includes(node.status))
+    },
+    goToMore () {
+      const path = `${this.$route.path}/all`
+      this.$router.push({ path })
+    },
+    goToLess () {
+      const parts = this.$route.path.split('/')
+      parts.pop()
+      const path = parts.join('/')
+      this.$router.push({ path })
     },
     xxx () {
       // this.$route.params.id

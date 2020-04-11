@@ -66,6 +66,16 @@ export default {
       /** @type MenuItem[] */
       processInstanceMenuItems: [
         {
+          icon: 'mdi-information-outline',
+          title: 'Zobrazit',
+          action: 'show',
+        },
+        {
+          icon: 'mdi-information-outline',
+          title: 'Zobrazit více',
+          action: 'showAll',
+        },
+        {
           icon: 'mdi-undo-variant',
           title: 'Stáhnout/Přerušit',
           action: 'withdrawn',
@@ -119,6 +129,12 @@ export default {
               this.closeYNDialog()
             })
           }
+          break
+        case 'show':
+          this.$router.push({ path: `/processinstance/${action.processInstance.id}` })
+          break
+        case 'showAll':
+          this.$router.push({ path: `/processinstance/${action.processInstance.id}/all` })
           break
       }
     },

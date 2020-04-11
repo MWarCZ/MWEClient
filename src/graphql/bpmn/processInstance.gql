@@ -1,10 +1,14 @@
 #import "../fragments/ProcessInstanceFragment.gql"
 #import "../fragments/NodeInstanceFragment.gql"
 #import "../fragments/ProcessTemplateFragment.gql"
+#import "../fragments/NodeTemplateFragment.gql"
 
 query processInstance($id: Int!) {
     processInstance(filter: {id: $id}) {
         nodeElements {
+            template {
+                ...NodeTemplateFragment
+            }
             ...NodeInstanceFragment
         }
         template {
