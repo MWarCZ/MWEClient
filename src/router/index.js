@@ -8,6 +8,7 @@ import NIClaim from '../views/NIClaim.vue'
 import PI from '../views/PI.vue'
 import ProcessInstances from '../views/ProcessInstances.vue'
 import ProcessTemplates from '../views/ProcessTemplates.vue'
+import Test from '../views/Test.vue'
 import Users from '../views/Users.vue'
 
 Vue.use(VueRouter)
@@ -63,6 +64,10 @@ const routes = [
   {
     path: '/processinstance/:id/:scope',
     component: PI,
+  },
+  {
+    path: '/test',
+    component: Test,
   },
 ]
 
