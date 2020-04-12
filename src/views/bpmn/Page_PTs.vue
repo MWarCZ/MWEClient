@@ -346,7 +346,7 @@ export default {
         },
       )
     },
-    sureDeleteProcess ({ processTemplate, nodeTemplate }) {
+    sureDeleteProcess ({ processTemplate }) {
       this.openYNDialog(
         `Chcete trvale smazat šablonu procesu '${processTemplate.name}' (${processTemplate.id})?`,
         () => {

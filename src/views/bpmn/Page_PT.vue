@@ -19,6 +19,9 @@
         <v-expansion-panel-content>
 
           <NTList :nodeTemplates="processTemplate.nodeElements">
+            <template #append-item="{nodeTemplate}">
+              {{nodeTemplate.implementation}}
+            </template>
           </NTList>
 
         </v-expansion-panel-content>
@@ -32,7 +35,11 @@
 
           <PIFilter :value="processTemplate.instances">
             <template #default="{data}">
-              <PIList :processInstances="data" :menuItems="processInstanceMenuItems">
+              <PIList
+                :processInstances="data"
+                :menuItems="processInstanceMenuItems"
+                @action="processInstanceActionSwitch"
+              >
                 <template #append-item>
                   <v-btn color="info">
                     <v-icon>mdi-information-outline</v-icon>
@@ -47,6 +54,23 @@
       </v-expansion-panel>
 
     </v-expansion-panels>
+
+    <!-- update btn -->
+    <v-tooltip left>
+      <template #activator="{on}">
+        <v-btn
+          fab
+          color="primary"
+          v-on="on"
+          fixed
+          right
+          bottom
+          x-large
+          @click="openUpdateDialog()"
+        > <v-icon x-large>mdi-lead-pencil</v-icon> </v-btn>
+      </template>
+      <span>Upravit šablonu procesu.</span>
+    </v-tooltip>
 
     <FullDialog v-model="fsDialog" :title="fsTitle" closeable>
       <v-container>
@@ -91,10 +115,11 @@ const gql = {
   client: require('../../graphql/auth/client.gql'),
   processTemplate: require('../../graphql/bpmn2/PTWithPIsAndNT.gql'),
   // Mutation
-  uploadProcess: require('../../graphql/bpmn/uploadProcess.gql'),
-  initProcess: require('../../graphql/bpmn/initProcess.gql'),
-  deleteProcessTemplate: require('../../graphql/bpmn/deleteProcessTemplate.gql'),
+  deleteProcessInstance: require('../../graphql/bpmn/deleteProcessInstance.gql'),
+  withdrawnProcess: require('../../graphql/bpmn/withdrawnProcess.gql'),
+
   updateProcessTemplate: require('../../graphql/bpmn/updateProcessTemplate.gql'),
+  initProcess: require('../../graphql/bpmn/initProcess.gql'),
   // Supbscription
   changedProcessTemplates: require('../../graphql/subscription/changedProcessTemplates.gql'),
   newProcessInstance: require('../../graphql/subscription/newProcessInstance.gql'),
@@ -262,6 +287,18 @@ export default {
       this.openFSDialog('Upravit šablonu procesu', 'update')
     },
     // =============
+
+    processInstanceActionSwitch (action) {
+      console.log(action.item.action, action)
+      switch (action.item.action) {
+        case 'delete':
+          this.sureDeleteProcess(action)
+          break
+        case 'withdrawn':
+          this.sureWithdrawnProcess(action)
+          break
+      }
+    },
     // ======================
     async tryActionWrapper (asyncFn, args = []) {
       this.loading = true
@@ -281,6 +318,31 @@ export default {
       })
     },
 
+    //= ================
+
+    sureDeleteProcess ({ processInstance }) {
+      this.openYNDialog(
+        `Chcete trvale smazat instanci procesu (${processInstance.id})?`,
+        () => {
+          this.tryActionWrapper(async () => {
+            await this.deleteProcess({ id: processInstance.id })
+            this.closeYNDialog()
+          })
+        },
+      )
+    },
+    sureWithdrawnProcess ({ processInstance }) {
+      this.openYNDialog(
+        `Chcete stáhnout/přerušit instanci procesu (${processInstance.id})?`,
+        () => {
+          this.tryActionWrapper(async () => {
+            await this.withdrawnProcess({ id: processInstance.id })
+            this.closeYNDialog()
+          })
+        },
+      )
+    },
+
     // Mutation
 
     async updateProcess ({ id, name, isExecutable, candidateManager }) {
@@ -297,6 +359,27 @@ export default {
       })
     },
 
+    async deleteProcess ({ id }) {
+      console.warn('TODO: deleteProcessInstance')
+      await simulateLoading()
+      await this.$apollo.mutate({
+        mutation: gql.deleteProcessInstance,
+        variables: {
+          idPI: id,
+        },
+      })
+    },
+
+    async withdrawnProcess ({ id }) {
+      console.warn('TODO: withdrawnProcess')
+      await simulateLoading()
+      await this.$apollo.mutate({
+        mutation: gql.withdrawnProcess,
+        variables: {
+          idPI: id,
+        },
+      })
+    },
     // =========================
 
   },
