@@ -17,14 +17,14 @@
           <template #append-item>
             <v-btn color="info">
               <v-icon>mdi-information-outline</v-icon>
-              text
+              Zobrazit
             </v-btn>
           </template>
         </PIList>
       </template>
     </PIFilter>
     ----
-    <NIFilter :value="nodeInstances">
+    <NIFilter :value="nodeInstances" statusReadonly statusValue="Waiting">
       <template #default="{data}">
         <NIList :nodeInstances="data"></NIList>
       </template>
@@ -49,7 +49,7 @@ const gql = {
   // processTemplates
   processTemplates: require('../graphql/bpmn/processTemplates_NTStart.gql'),
   processInstances: require('../graphql/bpmn/processInstances.gql'),
-  nodeInstances: require('../graphql/bpmn/nodeInstances.gql'), // TODO
+  nodeInstances: require('../graphql/bpmn/nodeInstances.gql'),
 
   uploadProcess: require('../graphql/bpmn/uploadProcess.gql'),
   initProcess: require('../graphql/bpmn/initProcess.gql'),

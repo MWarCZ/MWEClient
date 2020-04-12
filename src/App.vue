@@ -192,7 +192,7 @@ export default {
           icon: 'mdi-account-multiple',
         },
         {
-          link: '/processtemplates',
+          link: '/pts',
           title: 'Šablony procesů',
           icon: 'mdi-book-multiple',
         },

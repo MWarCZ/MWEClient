@@ -13,6 +13,8 @@
         type="number"
         v-model="id"
         @input="emitInput"
+        :readonly="idReadonly"
+        persistent-hint
       >
       </v-text-field>
     </v-toolbar>
@@ -45,10 +47,15 @@ export default {
       type: String,
       default: 'ID',
     },
+    idValue: {
+      type: String,
+      default: '',
+    },
+    idReadonly: Boolean,
   },
   data () {
     return {
-      id: '',
+      id: this.idValue,
     }
   },
   computed: {
@@ -62,7 +69,7 @@ export default {
     },
     /** @param {PT[]} args */
     provider (args) {
-      return args.filter(arg => arg.id.toString().startsWith(this.id))
+      return args.filter(arg => arg.id && arg.id.toString().startsWith(this.id))
     },
   },
 }

@@ -1,0 +1,11 @@
+#import "../fragments/ProcessTemplateFragment.gql"
+#import "../fragments/NodeTemplateFragment.gql"
+#import "../fragments/ProcessInstanceFragment.gql"
+
+query PTWithPIsAndNT($id: Int!) {
+    processTemplate(filter: {id: $id}) {
+        nodeElements { ...NodeTemplateFragment }
+        instances { ...ProcessInstanceFragment }
+        ...ProcessTemplateFragment
+    }
+}

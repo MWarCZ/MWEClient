@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+import PagePT from '../views/bpmn/Page_PT.vue'
+import PagePTs from '../views/bpmn/Page_PTs.vue'
 import Groups from '../views/Groups.vue'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
@@ -11,9 +13,18 @@ import ProcessTemplates from '../views/ProcessTemplates.vue'
 import Test from '../views/Test.vue'
 import Users from '../views/Users.vue'
 
+// import PagePIs from '../views/bpmn/Page_PIs.vue'
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/pts',
+    component: PagePTs,
+  },
+  {
+    path: '/pt/:id',
+    component: PagePT,
+  },
   {
     path: '/',
     name: 'Home',

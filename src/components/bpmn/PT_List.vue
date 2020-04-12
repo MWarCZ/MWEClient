@@ -25,7 +25,7 @@
             <v-list-item-subtitle>{{process.candidateManager}}</v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-content>
-            <v-list-item-title><b>ID:</b> <i>{{process.bpmnId}}</i> </v-list-item-title>
+            <v-list-item-title><b>BPMN ID:</b> <i>{{process.bpmnId}}</i> </v-list-item-title>
             <v-list-item-title><b>Verze:</b> <i>{{process.version}}</i></v-list-item-title>
         </v-list-item-content>
 

@@ -1,0 +1,6 @@
+
+fragment NodeInstanceFragmentExtend on NodeElementInstance {
+  data
+  returnValue
+}
+

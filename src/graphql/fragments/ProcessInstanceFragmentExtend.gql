@@ -1,0 +1,3 @@
+fragment ProcessInstanceFragment on ProcessInstance {
+    data
+}

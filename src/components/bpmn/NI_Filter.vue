@@ -13,6 +13,8 @@
         type="number"
         v-model="id"
         @input="emitInput"
+        :readonly="idReadonly"
+        persistent-hint
       >
       </v-text-field>
       <v-select
@@ -23,7 +25,9 @@
         :items="statusItems"
         v-model="status"
         :menu-props="{ bottom: true, offsetY: true }"
-        clearable
+        :clearable="!statusReadonly"
+        :readonly="statusReadonly"
+        persistent-hint
       ></v-select>
     </v-toolbar>
     <slot :data="provide" />
@@ -97,11 +101,22 @@ export default {
         },
       ],
     },
+    idValue: {
+      type: String,
+      default: '',
+    },
+    statusValue: {
+      type: String,
+      default: '',
+    },
+    idReadonly: Boolean,
+    statusReadonly: Boolean,
+
   },
   data () {
     return {
-      id: '',
-      status: '',
+      id: this.id,
+      status: this.statusValue,
     }
   },
   computed: {
@@ -111,7 +126,6 @@ export default {
   },
   methods: {
     emitInput () {
-      console.log('ddd')
       this.$emit('input', this.provide)
     },
     /** @param {PI[]} args */
