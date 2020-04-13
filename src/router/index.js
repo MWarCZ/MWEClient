@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+import PageNI from '../views/bpmn/Page_NI.vue'
+import PagePI from '../views/bpmn/Page_PI.vue'
 import PagePT from '../views/bpmn/Page_PT.vue'
 import PagePTs from '../views/bpmn/Page_PTs.vue'
 import Groups from '../views/Groups.vue'
@@ -24,6 +26,14 @@ const routes = [
   {
     path: '/pt/:id',
     component: PagePT,
+  },
+  {
+    path: '/pi/:id',
+    component: PagePI,
+  },
+  {
+    path: '/ni/:id',
+    component: PageNI,
   },
   {
     path: '/',

@@ -139,6 +139,9 @@ export default {
     PTUploader,
     PTEditor,
   },
+  mounted () {
+    this.$apollo.queries.processTemplates.refetch()
+  },
   apollo: {
     processTemplates: {
       query: gql.processTemplates,

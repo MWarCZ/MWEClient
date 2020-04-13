@@ -1,0 +1,13 @@
+#import "../fragments/NodeInstanceFragment.gql"
+#import "../fragments/NodeInstanceFragmentExtend.gql"
+#import "../fragments/NodeTemplateFragment.gql"
+
+query NIWithNT($id: Int!) {
+    nodeInstance(filter: {id: $id}) {
+        template {
+            ...NodeTemplateFragment
+        }
+        ...NodeInstanceFragment
+        ...NodeInstanceFragmentExtend
+    }
+}

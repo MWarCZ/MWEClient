@@ -1,0 +1,9 @@
+#import "../fragments/NodeInstanceFragment.gql"
+#import "../fragments/NodeInstanceFragmentExtend.gql"
+
+mutation nodeAdditions($idNI: Int!, $input: [NodeAdditionsInput!]!) {
+    nodeAdditions(idNI: $idNI, input: $input) {
+        ...NodeInstanceFragment
+        ...NodeInstanceFragmentExtend
+    }
+}

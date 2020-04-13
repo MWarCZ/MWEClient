@@ -1,0 +1,16 @@
+#import "../fragments/ProcessInstanceFragment.gql"
+#import "../fragments/ProcessTemplateFragment.gql"
+#import "../fragments/NodeInstanceFragment.gql"
+# Skip.import "../fragments/NodeTemplateFragment.gql"
+
+query PIWithNIsAndPT($id: Int!) {
+    processInstance(filter: {id: $id}) {
+        template {
+            ...ProcessTemplateFragment
+        }
+        nodeElements {
+            ...NodeInstanceFragment
+        }
+        ...ProcessInstanceFragment
+    }
+}

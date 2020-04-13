@@ -40,8 +40,8 @@
                 :menuItems="processInstanceMenuItems"
                 @action="processInstanceActionSwitch"
               >
-                <template #append-item>
-                  <v-btn color="info">
+                <template #append-item="{processInstance}">
+                  <v-btn color="info" @click="goToPI(processInstance)">
                     <v-icon>mdi-information-outline</v-icon>
                     Zobrazit
                   </v-btn>
@@ -140,6 +140,9 @@ export default {
     YesNoDialog,
     FullDialog,
     PTEditor,
+  },
+  mounted () {
+    this.$apollo.queries.processTemplate.refetch()
   },
   apollo: {
     processTemplate: {
@@ -259,7 +262,10 @@ export default {
   },
   methods: {
 
-    //= ================
+    goToPI ({ id }) {
+      this.$router.push({ path: `/pi/${id}` })
+    },
+    // =================
     openYNDialog (ynTitle, ynActionYes, ynActionNo) {
       this.msgError = ''
       this.ynDialog = true

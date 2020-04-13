@@ -1,15 +1,15 @@
 <template>
   <div>
-    <slot name="prepend" :process="process"></slot>
+    <slot name="prepend" :node="node"></slot>
     <LineElement :items="[implementationTitle, idTitle, nameTitle, assigneeTitle]">
       <template #item.0>
-        <NTIcon large :implementation="process.implementation" />
+        <NTIcon large :implementation="node.implementation" />
       </template>
-      <template #item.1>{{process.id}}</template>
-      <template #item.2>{{process.name}}</template>
-      <template #item.3>{{process.candidateAssignee}}</template>
+      <template #item.1>{{node.id}}</template>
+      <template #item.2>{{node.name}}</template>
+      <template #item.3>{{node.candidateAssignee}}</template>
     </LineElement>
-    <slot name="append" :process="process"></slot>
+    <slot name="append" :node="node"></slot>
   </div>
 </template>
 <script>
@@ -33,7 +33,7 @@ export default {
   },
   props: {
     /** @type {new=>NT} */
-    process: {
+    node: {
       type: Object,
       required: true,
     },
@@ -51,7 +51,7 @@ export default {
     },
     assigneeTitle: {
       type: String,
-      default: 'Nabyvatel',
+      default: 'Skupina kandidátů',
     },
   },
 }

@@ -53,6 +53,10 @@ export default {
       type: String,
       default: 'Započetí',
     },
+    endDateTimeTitle: {
+      type: String,
+      default: 'Ukončení',
+    },
     assigneeTitle: {
       type: String,
       default: 'Nabyvatel',
@@ -62,8 +66,8 @@ export default {
     return { }
   },
   computed: {
-    startDateTime () { return this.getDate(this.process.startDateTime) },
-    endDateTime () { return this.getDate(this.process.endDateTime) },
+    startDateTime () { return this.getDate(this.node.startDateTime) },
+    endDateTime () { return this.getDate(this.node.endDateTime) },
     assignee () { return this.node.assignee ? this.node.assignee.login : '[Neobsazeno]' },
   },
   methods: {
