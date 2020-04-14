@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <BackButton />
 
     <h1 class="text-center">Šablona procesu</h1>
 
@@ -21,6 +22,18 @@
           <NTList :nodeTemplates="processTemplate.nodeElements">
             <template #append-item="{nodeTemplate}">
               {{nodeTemplate.implementation}}
+              <v-tooltip bottom v-if="textContains(nodeTemplate.implementation, 'startevent')">
+                <template #activator="{on}">
+                  <v-btn
+                    fab
+                    color="primary"
+                    v-on="on"
+                    @click="sureInitProcess({processTemplate, nodeTemplate})"
+                    small
+                  > <v-icon>mdi-play</v-icon> </v-btn>
+                </template>
+                <span>Spustit proces na udalosti {{nodeTemplate.name}}</span>
+              </v-tooltip>
             </template>
           </NTList>
 
@@ -36,7 +49,7 @@
           <PIFilter :value="processTemplate.instances">
             <template #default="{data}">
               <PIList
-                :processInstances="data"
+                :processInstances="[...data].reverse()"
                 :menuItems="processInstanceMenuItems"
                 @action="processInstanceActionSwitch"
               >
@@ -108,6 +121,7 @@ import PTInfo from '../../components/bpmn/PT_Info'
 import YesNoDialog from '../../components/YesNoDialog'
 import FullDialog from '../../components/FullDialog'
 import PTEditor from '../../components/bpmn/PT_Editor'
+import BackButton from '../../components/backButton'
 
 import { simulateLoading } from '../../simulateLoading'
 
@@ -140,6 +154,7 @@ export default {
     YesNoDialog,
     FullDialog,
     PTEditor,
+    BackButton,
   },
   mounted () {
     this.$apollo.queries.processTemplate.refetch()
@@ -226,7 +241,7 @@ export default {
   data () {
     return {
       processTemplate: null,
-      expansionPanels: [],
+      expansionPanels: [0, 1],
 
       loading: false,
       msgError: '',
@@ -349,6 +364,21 @@ export default {
       )
     },
 
+    sureInitProcess ({ processTemplate, nodeTemplate }) {
+      this.openYNDialog(
+        `Chcete spustit proces '${processTemplate.name}' na události '${nodeTemplate.name}'?`,
+        () => {
+          this.tryActionWrapper(async () => {
+            await this.initProcess({
+              idProcessTemplate: processTemplate.id,
+              idNodeTemplate: nodeTemplate.id,
+            })
+            this.closeYNDialog()
+          })
+        },
+      )
+    },
+
     // Mutation
 
     async updateProcess ({ id, name, isExecutable, candidateManager }) {
@@ -386,8 +416,26 @@ export default {
         },
       })
     },
+
+    async initProcess ({ idProcessTemplate, idNodeTemplate }) {
+      console.warn('TODO: initProcess')
+      await simulateLoading()
+      await this.$apollo.mutate({
+        mutation: gql.initProcess,
+        variables: {
+          idProcessTemplate, idNodeTemplate,
+        },
+      })
+    },
     // =========================
 
+    textContains (implementation, text) {
+      if (typeof implementation === 'string') {
+        return implementation.toLowerCase().includes(text)
+      }
+      console.warn('Chyba pri pokusu urcit implementaci: ', implementation)
+      return false
+    },
   },
 }
 </script>

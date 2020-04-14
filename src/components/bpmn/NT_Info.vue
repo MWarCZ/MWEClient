@@ -3,7 +3,10 @@
     <slot name="prepend" :node="node"></slot>
     <LineElement :items="[implementationTitle, idTitle, nameTitle, assigneeTitle]">
       <template #item.0>
-        <NTIcon large :implementation="node.implementation" />
+        <div class="text-center justify-center">
+          <NTIcon large :implementation="node.implementation" />
+          <div>{{node.implementation}}</div>
+        </div>
       </template>
       <template #item.1>{{node.id}}</template>
       <template #item.2>{{node.name}}</template>

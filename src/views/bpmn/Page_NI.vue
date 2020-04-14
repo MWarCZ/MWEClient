@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <BackButton />
 
     <h1 class="text-center">Instance uzlu</h1>
 
@@ -18,24 +19,83 @@
       v-model="expansionPanels"
       focusable accordion multiple
     >
+      <v-container class="text-center">
 
-      <v-btn
-        color="success"
-        @click="sureClaimNodeInstance({nodeInstance})"
-      >
-        Zabrat/Obsadit
-      </v-btn>
-      <v-btn color="error" @click="sureReleaseNodeInstance({nodeInstance})">
-        Uvolnit
-      </v-btn>
+        <v-btn v-if="isItClient(nodeInstance.assignee)"
+          color="error" @click="sureReleaseNodeInstance({nodeInstance})">
+          Uvolnit
+        </v-btn>
+        <v-btn v-else
+          color="success"
+          @click="sureClaimNodeInstance({nodeInstance})"
+        >
+          Zabrat/Obsadit
+        </v-btn>
+      </v-container>
 
-      <v-expansion-panel>
+      <v-expansion-panel v-if="isItClient(nodeInstance.assignee)">
         <v-expansion-panel-header>
-          <span class="display-1 text-center">XXX</span>
+          <span class="display-1 text-center">Formulář s dodatky</span>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
+          <v-container class="text-center">
+            <v-btn v-if="!nodeAdditionsFormat"
+              color="info"
+              @click="getAdditionsFormat()"
+            >Našist formulář</v-btn>
 
-          xxx
+            <AdditionsForm v-else
+              :items="nodeAdditionsFormat"
+              @submit="sureNodeAdditions({ nodeInstance, input: $event})"
+              :itemsX="[
+                {
+                  name: 'CheckBox',
+                  type: 'checkbox',
+                  default: 'true',
+                },
+                {
+                  name: 'Color',
+                  type: 'color',
+                },
+                //===============
+                {
+                  name: 'email',
+                  type: 'email',
+                },
+                {
+                  name: 'number',
+                  type: 'number',
+                },
+                {
+                  name: 'password',
+                  type: 'password',
+                },
+                //===============
+                {
+                  name: 'range',
+                  type: 'range',
+                },
+                {
+                  name: 'search',
+                  type: 'search',
+                },
+                {
+                  name: 'tel',
+                  type: 'tel',
+                },
+                //==========
+                {
+                  name: 'select',
+                  type: 'select',
+                },
+                {
+                  name: 'XSelect',
+                  type: 'select',
+                  possibilities: ['Ano', 'Ne']
+                },
+              ]"
+            />
+          </v-container>
 
         </v-expansion-panel-content>
       </v-expansion-panel>
@@ -67,17 +127,23 @@ import NIInfo from '../../components/bpmn/NI_Info'
 import NTInfo from '../../components/bpmn/NT_Info'
 import YesNoDialog from '../../components/YesNoDialog'
 import FullDialog from '../../components/FullDialog'
+import BackButton from '../../components/backButton'
+import AdditionsForm from '../../components/bpmn/AdditionsForm'
 
 import { simulateLoading } from '../../simulateLoading'
 
 const gql = {
+  client: require('../../graphql/auth/client.gql'),
+  // Query
   nodeInstance: require('../../graphql/bpmn2/NIWithNT.gql'),
   // Mutation
   claimNodeInstance: require('../../graphql/bpmn2/claimNodeInstance.gql'),
   releaseNodeInstance: require('../../graphql/bpmn2/releaseNodeInstance.gql'),
+  nodeAdditionsFormat: require('../../graphql/bpmn2/nodeAdditionsFormat.gql'),
+  nodeAdditions: require('../../graphql/bpmn2/nodeAdditions.gql'),
 
   // Supbscription
-  changedProcessInstance: require('../../graphql/subscription/changedProcessInstance.gql'),
+  changedNodeInstances: require('../../graphql/subscription/changedNodeInstances.gql'),
 }
 
 /** @typedef MenuItem
@@ -90,12 +156,13 @@ export default {
     NTInfo,
     YesNoDialog,
     FullDialog,
+    BackButton,
+    AdditionsForm,
   },
   mounted () {
     // this.$apollo.queries.nodeInstance.refetch()
   },
   apollo: {
-
     nodeInstance: {
       query: gql.nodeInstance,
       variables () {
@@ -103,12 +170,46 @@ export default {
           id: this.routeId,
         }
       },
+      subscribeToMore: [
+        {
+          document: gql.changedNodeInstances,
+          updateQuery (previousResult, { subscriptionData }) {
+            if (!subscriptionData.data.changedNodeInstances) {
+              return previousResult
+            }
+            const changedNIs = subscriptionData.data.changedNodeInstances
+
+            const newNI = changedNIs.find(ni => ni.id === previousResult.nodeInstance.id)
+            if (newNI) {
+              return {
+                nodeInstance: newNI,
+              }
+            }
+            return previousResult
+          },
+        },
+      ],
+    },
+    client: {
+      query: gql.client,
+    },
+    nodeAdditionsFormat: {
+      query: gql.nodeAdditionsFormat,
+      variables () {
+        return { idNI: this.routeId }
+      },
+      skip () {
+        return !this.loadAdditionFormat
+      },
     },
   },
   data () {
     return {
+      client: null,
       processInstance: null,
-      expansionPanels: [],
+      expansionPanels: [0],
+      nodeAdditionsFormat: null,
+      loadAdditionFormat: false,
 
       loading: false,
       msgError: '',
@@ -129,6 +230,26 @@ export default {
     },
   },
   methods: {
+    getAdditionsFormat () {
+      this.loadAdditionFormat = true
+      this.$apollo.queries.nodeAdditionsFormat.refetch()
+    },
+    // =====
+    isClientInGroup (groupName) {
+      try {
+        console.log('Client:', this.client)
+        const names = this.client.members.map(m => m.group.name)
+        console.log({ names })
+        return names.includes(groupName)
+      } catch {
+        return false
+      }
+    },
+    isItClient (assignee) {
+      try {
+        return assignee.id === this.client.id || assignee.login === this.client.login
+      } catch { return false }
+    },
 
     // =================
     openYNDialog (ynTitle, ynActionYes, ynActionNo) {
@@ -191,6 +312,18 @@ export default {
       )
     },
 
+    sureNodeAdditions ({ nodeInstance, input }) {
+      this.openYNDialog(
+        `Chcete odeslat doplnky pro instanci uzlu (${nodeInstance.id})?`,
+        () => {
+          this.tryActionWrapper(async () => {
+            await this.nodeAdditions({ id: nodeInstance.id, input })
+            this.closeYNDialog()
+          })
+        },
+      )
+    },
+
     // Mutace
 
     async claimNodeInstance ({ id }) {
@@ -210,6 +343,18 @@ export default {
         mutation: gql.releaseNodeInstance,
         variables: {
           idNI: id,
+        },
+      })
+    },
+
+    async nodeAdditions ({ id, input }) {
+      console.warn('TODO: nodeAdditions')
+      await simulateLoading()
+      await this.$apollo.mutate({
+        mutation: gql.nodeAdditions,
+        variables: {
+          idNI: id,
+          input,
         },
       })
     },

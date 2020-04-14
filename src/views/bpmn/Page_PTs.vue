@@ -6,7 +6,7 @@
     <PTFilter :value="processTemplates">
       <template #default="{data}">
         <PTList
-          :processTemplates="data"
+          :processTemplates="[...data].reverse()"
           :menuItems="processMenuItems"
           @action="processTemplateActionSwitch"
         >

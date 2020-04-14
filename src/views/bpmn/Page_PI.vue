@@ -1,6 +1,8 @@
 <template>
   <v-container>
 
+    <BackButton />
+
     <h1 class="text-center">Instance procesu</h1>
 
     <PIInfo v-if="processInstance" :process="processInstance"></PIInfo>
@@ -28,11 +30,15 @@
           <NIFilter :value="processInstance.nodeElements">
             <template #default="{data}">
               <NIList
-                :nodeInstances="data"
+                :nodeInstances="[...data].reverse()"
                 :menuItems="nodeItems"
                 @action="1"
               >
                 <template #append-item="{nodeInstance}">
+                  <v-list-item-content v-if="nodeInstance.assignee">
+                    <v-list-item-title>Nabyvatel</v-list-item-title>
+                    <v-list-item-subtitle>{{nodeInstance.assignee.login}}</v-list-item-subtitle>
+                  </v-list-item-content>
                   <v-btn color="info" @click="goToNI(nodeInstance)">
                     <v-icon>mdi-information-outline</v-icon>
                     Zobrazit
@@ -82,6 +88,7 @@ import PIInfo from '../../components/bpmn/PI_Info'
 import PTInfo from '../../components/bpmn/PT_Info'
 import YesNoDialog from '../../components/YesNoDialog'
 import FullDialog from '../../components/FullDialog'
+import BackButton from '../../components/backButton'
 
 import { simulateLoading } from '../../simulateLoading'
 
@@ -95,6 +102,7 @@ const gql = {
   // Supbscription
   changedProcessInstance: require('../../graphql/subscription/changedProcessInstance.gql'),
   changedProcessTemplates: require('../../graphql/subscription/changedProcessTemplates.gql'),
+  changedNodeInstances: require('../../graphql/subscription/changedNodeInstances.gql'),
 }
 
 /** @typedef MenuItem
@@ -109,6 +117,7 @@ export default {
     PTInfo,
     YesNoDialog,
     FullDialog,
+    BackButton,
   },
   mounted () {
     this.$apollo.queries.processInstance.refetch()
@@ -135,7 +144,8 @@ export default {
             return {
               processInstance: {
                 ...newPI,
-                nodeInstances: previousResult.processInstance.nodeElements,
+                nodeElements: previousResult.processInstance.nodeElements,
+                template: previousResult.processInstance.template,
               },
             }
           },
@@ -155,13 +165,41 @@ export default {
             return previousResult
           },
         },
+        {
+          document: gql.changedNodeInstances,
+          updateQuery (previousResult, { subscriptionData }) {
+            if (!subscriptionData.data.changedNodeInstances) {
+              return previousResult
+            }
+            // NI z teto PI
+            const changedNIs = subscriptionData.data.changedNodeInstances.filter(ni => ni.processInstance.id === previousResult.processInstance.id)
+
+            const oldIds = previousResult.processInstance.nodeElements.map(p => p.id)
+            const allChangedIds = changedNIs.map(p => p.id)
+
+            const changedIds = allChangedIds.filter(id => oldIds.includes(id))
+            // Zmenene uzly
+            const newNIs1 = previousResult.processInstance.nodeElements.map(oldNI => {
+              if (changedIds.includes(oldNI.id)) {
+                const newNI = changedNIs.find(pt => pt.id === oldNI.id)
+                return newNI
+              }
+              return oldNI
+            })
+            // Nove uzly
+            const newNIs2 = changedNIs.filter(ni => !oldIds.includes(ni.id))
+
+            previousResult.processInstance.nodeElements = [...newNIs1, ...newNIs2]
+            return previousResult
+          },
+        },
       ],
     },
   },
   data () {
     return {
       processInstance: null,
-      expansionPanels: [],
+      expansionPanels: [0],
 
       loading: false,
       msgError: '',
@@ -198,6 +236,9 @@ export default {
   methods: {
     goToNI ({ id }) {
       this.$router.push({ path: `/ni/${id}` })
+    },
+    goBack () {
+      this.$route.go(-1)
     },
     // =================
     openYNDialog (ynTitle, ynActionYes, ynActionNo) {

@@ -1,0 +1,16 @@
+#import "../fragments/NodeInstanceFragment.gql"
+#import "../fragments/NodeInstanceFragmentExtend.gql"
+#import "../fragments/NodeTemplateFragment.gql"
+
+subscription changedNodeInstances {
+    changedNodeInstances {
+        template {
+            ...NodeTemplateFragment
+        }
+        processInstance {
+            id
+        }
+        ...NodeInstanceFragment
+        ...NodeInstanceFragmentExtend
+    }
+}
