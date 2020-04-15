@@ -1,0 +1,11 @@
+#import "../fragments/NodeInstanceFragment.gql"
+#import "../fragments/NodeTemplateFragment.gql"
+
+query nodeInstances($status: String) {
+    nodeInstances(filter: {status: $status}) {
+        template {
+            ...NodeTemplateFragment
+        }
+        ...NodeInstanceFragment
+    }
+}

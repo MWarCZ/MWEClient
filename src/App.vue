@@ -182,6 +182,21 @@ export default {
           icon: 'mdi-home',
         },
         {
+          link: '/pts',
+          title: 'Šablony procesů',
+          icon: 'mdi-book-multiple',
+        },
+        {
+          link: '/nis4me',
+          title: 'Uzly pro mne',
+          icon: 'mdi-book-multiple',
+        },
+        {
+          link: '/mynis',
+          title: 'Moje uzly',
+          icon: 'mdi-book-multiple',
+        },
+        {
           link: '/groups',
           title: 'Skupiny',
           icon: 'mdi-account-group',
@@ -190,21 +205,6 @@ export default {
           link: '/users',
           title: 'Uživatele',
           icon: 'mdi-account-multiple',
-        },
-        {
-          link: '/processtemplates',
-          title: 'Šablony procesů',
-          icon: 'mdi-book-multiple',
-        },
-        {
-          link: '/processinstances',
-          title: 'Instance procesů',
-          icon: 'mdi-book-multiple',
-        },
-        {
-          link: '/login',
-          title: 'Login',
-          icon: 'mdi-key',
         },
       ],
     }

@@ -1,7 +1,8 @@
 <template>
   <v-container>
-    <div v-if="client">OK</div>
-    <div v-else>KO</div>
+
+    <h1 class="text-center">Skupiny</h1>
+
     <GList
       :groups="groups"
       :menuItems="groupMenuItems"

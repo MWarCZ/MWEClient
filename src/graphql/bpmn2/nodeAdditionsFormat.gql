@@ -1,0 +1,10 @@
+
+query nodeAdditionsFormat($idNI: Int!) {
+  nodeAdditionsFormat(idNI: $idNI) {
+    name 
+    type
+    possibilities
+    default
+    hints
+  }
+}

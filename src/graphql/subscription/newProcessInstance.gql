@@ -1,0 +1,10 @@
+#import "../fragments/ProcessInstanceFragment.gql"
+
+subscription newProcessInstance {
+    newProcessInstance {
+        template {
+            id
+        }
+        ...ProcessInstanceFragment
+    }
+}

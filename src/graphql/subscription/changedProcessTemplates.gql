@@ -1,0 +1,13 @@
+#import "../fragments/ProcessTemplateFragment.gql"
+#import "../fragments/NodeTemplateFragment.gql"
+
+subscription changedProcessTemplates {
+    changedProcessTemplates {
+        nodeElements(filter: {
+            implementationContains: "startevent"
+        }) {
+            ...NodeTemplateFragment
+        }
+        ...ProcessTemplateFragment
+    }
+}

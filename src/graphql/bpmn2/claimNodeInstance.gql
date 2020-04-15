@@ -1,0 +1,11 @@
+#import "../fragments/NodeInstanceFragment.gql"
+
+mutation claimNodeInstance($idNI: Int!) {
+    claimNodeInstance(idNI: $idNI) { 
+        assignee {
+            id 
+            login 
+        }
+        ...NodeInstanceFragment
+    }
+}

@@ -4,4 +4,8 @@ fragment NodeInstanceFragment on NodeElementInstance {
   startDateTime
   endDateTime
   status
+  assignee {
+    id
+    login
+  }
 }
