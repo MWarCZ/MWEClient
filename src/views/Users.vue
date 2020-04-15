@@ -180,10 +180,6 @@ export default {
     },
   },
   methods: {
-    log (...args) {
-      console.log(...args)
-    },
-
     openYNDialog () {
       this.msgError = ''
       this.ynDialog = true
@@ -202,7 +198,7 @@ export default {
     },
 
     userActionSwitch (action) {
-      console.log(action.item.action, action)
+      // console.log(action.item.action, action)
       this.selectedUser = action.user
       switch (action.item.action) {
         case 'update':
@@ -269,7 +265,7 @@ export default {
         await asyncFn(...args)
       } catch (e) {
         this.msgError = (e.message) ? e.message : 'Nepodarilo se.'
-        console.error(e)
+        // console.error(e)
       }
       this.actionWaiting = false
     },
@@ -290,7 +286,6 @@ export default {
     },
 
     async createUser ({ login, password, firstName = '', lastName = '', email = '' }) {
-      console.warn('TODO: createUser')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.createUser,
@@ -298,7 +293,6 @@ export default {
           login, password, firstName, lastName, email,
         },
         update (proxy, { data: { createUser } }) {
-          console.log(createUser)
           if (createUser) {
             const data = proxy.readQuery({
               query: gql.users,
@@ -314,7 +308,6 @@ export default {
       })
     },
     async updateUser ({ login, firstName, lastName, email }) {
-      console.warn('TODO: updateUser')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.updateUserInfo,
@@ -322,7 +315,6 @@ export default {
           login, firstName, lastName, email,
         },
         update (proxy, { data: { updateUserInfo } }) {
-          console.log(updateUserInfo)
           if (updateUserInfo) {
             const data = proxy.readQuery({
               query: gql.users,
@@ -349,7 +341,6 @@ export default {
       })
     },
     async removeUser ({ login }) {
-      console.warn('TODO: removeUser')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.removeUser,
@@ -357,7 +348,6 @@ export default {
           login,
         },
         update (proxy, { data: { removeUser } }) {
-          console.log(removeUser)
           if (removeUser) {
             const data = proxy.readQuery({
               query: gql.users,
@@ -377,7 +367,6 @@ export default {
       })
     },
     async recoverUser ({ login }) {
-      console.warn('TODO: recoverUser')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.recoverUser,
@@ -385,7 +374,6 @@ export default {
           login,
         },
         update (proxy, { data: { recoverUser } }) {
-          console.log(recoverUser)
           if (recoverUser) {
             const data = proxy.readQuery({
               query: gql.users,
@@ -405,7 +393,6 @@ export default {
       })
     },
     async deleteUser ({ login }) {
-      console.warn('TODO: deleteUser', { name })
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.deleteUser,
@@ -413,7 +400,6 @@ export default {
           login,
         },
         update (proxy, { data: { deleteUser } }) {
-          console.log(deleteUser)
           if (deleteUser) {
             const data = proxy.readQuery({
               query: gql.users,
@@ -434,7 +420,6 @@ export default {
       })
     },
     async lockUser ({ login }) {
-      console.warn('TODO: lockUser')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.lockUser,
@@ -442,7 +427,6 @@ export default {
           login,
         },
         update (proxy, { data: { lockUser } }) {
-          console.log(lockUser)
           if (lockUser) {
             const data = proxy.readQuery({
               query: gql.users,
@@ -462,7 +446,6 @@ export default {
       })
     },
     async unlockUser ({ login }) {
-      console.warn('TODO: unlockUser')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.unlockUser,
@@ -470,7 +453,6 @@ export default {
           login,
         },
         update (proxy, { data: { unlockUser } }) {
-          console.log(unlockUser)
           if (unlockUser) {
             const data = proxy.readQuery({
               query: gql.users,

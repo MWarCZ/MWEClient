@@ -21,7 +21,7 @@
             v-model="selectedHelper"
             style="margin-top:-15px"
             color="primary"
-            @change="log(selectedHelper)"
+            @change="1"
           >
             <v-tooltip bottom>
               <template #activator="{on}">
@@ -131,9 +131,6 @@ export default {
       this.bpmnFile = undefined
       this.bpmnUrl = ''
       this.newBpmnText = this.bpmnText = ''
-    },
-    log (...args) {
-      console.warn(args)
     },
 
     loadUrlFromText (text) {
