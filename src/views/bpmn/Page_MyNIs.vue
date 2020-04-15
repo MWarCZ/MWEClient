@@ -198,7 +198,7 @@ export default {
         await asyncFn(...args)
       } catch (e) {
         this.msgError = (e.message) ? e.message : 'Něco se nepodařilo.'
-        console.error(e)
+        // console.error(e)
       }
       this.loading = false
     },

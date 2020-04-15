@@ -1,5 +1,5 @@
 // @emit input PT[]
-// @slot default
+// @slot default {data: PT[]}
 <template>
   <div>
     <v-toolbar

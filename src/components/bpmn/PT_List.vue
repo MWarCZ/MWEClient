@@ -1,7 +1,7 @@
-// @slot extend-process { processTemplate }
-// @slot prepend-item { processTemplate }
-// @slot append-item { processTemplate }
-// @emit action { item, processTemplate }
+// @slot extend-process { processTemplate: PT }
+// @slot prepend-item { processTemplate: PT }
+// @slot append-item { processTemplate: PT }
+// @emit action { item: MenuItem, processTemplate: PT }
 <template>
   <v-list>
     <v-list-group

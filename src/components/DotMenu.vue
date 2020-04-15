@@ -1,4 +1,4 @@
-// @emit select @param item
+// @emit select item
 <template>
   <v-menu left bottom offset-x>
     <template v-slot:activator="{ on }">

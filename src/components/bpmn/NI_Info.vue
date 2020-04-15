@@ -1,3 +1,5 @@
+// @slot prepend {node: NI}
+// @slot append {node: NI}
 <template>
   <div>
     <slot name="prepend" :node="node"></slot>
