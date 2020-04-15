@@ -4,6 +4,9 @@ import VueRouter from 'vue-router'
 import Groups from '../views/Groups.vue'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
+import NIClaim from '../views/NIClaim.vue'
+import PI from '../views/PI.vue'
+import ProcessInstances from '../views/ProcessInstances.vue'
 import ProcessTemplates from '../views/ProcessTemplates.vue'
 import Users from '../views/Users.vue'
 
@@ -42,6 +45,24 @@ const routes = [
     path: '/processtemplates',
     name: 'ProcessTemplates',
     component: ProcessTemplates,
+  },
+  {
+    path: '/processinstances',
+    name: 'ProcessInstances',
+    component: ProcessInstances,
+  },
+  {
+    path: '/claim',
+    name: 'ClaimNodeInstance',
+    component: NIClaim,
+  },
+  {
+    path: '/processinstance/:id',
+    component: PI,
+  },
+  {
+    path: '/processinstance/:id/:scope',
+    component: PI,
   },
 ]
 

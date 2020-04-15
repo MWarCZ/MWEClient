@@ -1,0 +1,7 @@
+
+fragment NodeInstanceFragment on NodeElementInstance {
+  id
+  startDateTime
+  endDateTime
+  status
+}

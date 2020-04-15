@@ -1,0 +1,13 @@
+#import "../fragments/ProcessTemplateFragment.gql"
+#import "../fragments/NodeTemplateFragment.gql"
+
+mutation uploadProcess($xml: String!) {
+    uploadProcess(xml:$xml) {
+        nodeElements(filter: {
+            implementationContains: "startevent"
+        }) {
+            ...NodeTemplateFragment
+        }
+        ...ProcessTemplateFragment
+    }
+}

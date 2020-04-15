@@ -1,0 +1,7 @@
+#import "../fragments/ProcessInstanceFragment.gql"
+
+query processInstances {
+    processInstances {
+        ...ProcessInstanceFragment
+    }
+}

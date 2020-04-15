@@ -1,0 +1,7 @@
+#import "../fragments/ProcessTemplateFragment.gql"
+
+query processTemplate($id: Int!) {
+    processTemplate(filter: {id: $id}) {
+        ...ProcessTemplateFragment
+    }
+}

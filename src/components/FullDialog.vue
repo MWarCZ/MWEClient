@@ -2,7 +2,7 @@
   <v-dialog
     :value="value"
     @input="emitInput($event)"
-    scrollable fullscreen
+    fullscreen
     persistent :overlay="false"
     max-width="500px"
     :transition="transition"

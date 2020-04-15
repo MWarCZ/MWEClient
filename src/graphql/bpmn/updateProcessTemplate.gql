@@ -1,0 +1,22 @@
+#import "../fragments/ProcessTemplateFragment.gql"
+#import "../fragments/NodeTemplateFragment.gql"
+
+mutation updateProcessTemplate(
+    $idPT: Int!, 
+    $name: String, 
+    $isExecutable: Boolean,
+    $candidateManager: String,
+) {
+    updateProcessTemplate(idPT: $idPT, input: {
+        candidateManager: $candidateManager,
+        isExecutable: $isExecutable,
+        name: $name,
+    } ) {
+        nodeElements(filter: {
+            implementationContains: "startevent"
+        }) {
+            ...NodeTemplateFragment
+        }
+        ...ProcessTemplateFragment
+    }
+}

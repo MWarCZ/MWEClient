@@ -1,0 +1,7 @@
+# NodeInstance
+mutation nodeAdditions($idNodeInstance: Int!, $inputArr:[NodeAdditionsInput!]! ) {
+    nodeAdditions(idNI: $idNodeInstance, input: $inputArr) {
+        id
+        data
+    }
+}

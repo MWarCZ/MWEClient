@@ -1,0 +1,13 @@
+#import "../fragments/ProcessTemplateFragment.gql"
+#import "../fragments/NodeTemplateFragment.gql"
+
+query processTemplates_NTStart {
+    processTemplates {
+        nodeElements(filter: {
+            implementationContains: "startevent"
+        }) {
+            ...NodeTemplateFragment
+        }
+        ...ProcessTemplateFragment
+    }
+}

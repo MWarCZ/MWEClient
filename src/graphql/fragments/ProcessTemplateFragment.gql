@@ -1,0 +1,10 @@
+fragment ProcessTemplateFragment on ProcessTemplate {
+    id
+    bpmnId
+    name
+    version
+    versionType
+    isExecutable
+    processType
+    candidateManager
+}

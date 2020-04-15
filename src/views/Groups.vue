@@ -7,52 +7,52 @@
       :menuItems="groupMenuItems"
       @action="groupActionSwitch"
       >
-
       <template #extend-group="{ group }">
-        <v-container text-center>
-          <v-toolbar>
-            <v-autocomplete
-              label="Přidat uživatele do skupiny"
-              :items="usersNonMemberProvider(group.members)"
-              v-model="selectedUser"
-              clearable
-            ></v-autocomplete>
-            <v-spacer></v-spacer>
-            <v-tooltip bottom>
-              <template #activator="{on}">
-                <div>
-                  <v-progress-circular v-if="actionWaiting" indeterminate />
-                  <v-btn v-else
-                    :disabled="!selectedUser"
-                    fab small
-                    color="primary"
-                    v-on="on"
-                    @click="shortcutTryAddMember(group.name, selectedUser.login)"
-                  > <v-icon>mdi-plus</v-icon> </v-btn>
-                </div>
-              </template>
-              <span>Přidat uživatele do skupiny.</span>
-            </v-tooltip>
-          </v-toolbar>
+        <v-container>
+          <v-container text-center>
+            <v-toolbar>
+              <v-autocomplete
+                label="Přidat uživatele do skupiny"
+                :items="usersNonMemberProvider(group.members)"
+                v-model="selectedUser"
+                clearable
+              ></v-autocomplete>
+              <v-spacer></v-spacer>
+              <v-tooltip bottom>
+                <template #activator="{on}">
+                  <div>
+                    <v-progress-circular v-if="actionWaiting" indeterminate />
+                    <v-btn v-else
+                      :disabled="!selectedUser"
+                      fab small
+                      color="primary"
+                      v-on="on"
+                      @click="shortcutTryAddMember(group.name, selectedUser.login)"
+                    > <v-icon>mdi-plus</v-icon> </v-btn>
+                  </div>
+                </template>
+                <span>Přidat uživatele do skupiny.</span>
+              </v-tooltip>
+            </v-toolbar>
+          </v-container>
+
+          <GMList v-if="group"
+            :members="group.members || []"
+            :menuItems="memberMenuItems"
+            @action="memberActionSwitch(group, $event)"
+          >
+            <template #append-item-title="{member}">
+              <v-tooltip bottom>
+                <template #activator="{on}">
+                  <v-btn v-on="on" icon :to="`/users#${member.user.login}`">
+                    <v-icon>mdi-account-search</v-icon>
+                  </v-btn>
+                </template>
+                <span>Přejit na uživatele '{{member.user.login}}'</span>
+              </v-tooltip>
+            </template>
+          </GMList>
         </v-container>
-
-        <GMList v-if="group"
-          :members="group.members || []"
-          :menuItems="memberMenuItems"
-          @action="memberActionSwitch(group, $event)"
-        >
-          <template #append-item-title="{member}">
-            <v-tooltip bottom>
-              <template #activator="{on}">
-                <v-btn v-on="on" icon :to="`/users#${member.user.login}`">
-                  <v-icon>mdi-account-search</v-icon>
-                </v-btn>
-              </template>
-              <span>Přejit na uživatele '{{member.user.login}}'</span>
-            </v-tooltip>
-          </template>
-        </GMList>
-
       </template>
     </GList>
 

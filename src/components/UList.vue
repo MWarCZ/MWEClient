@@ -42,9 +42,7 @@
 
         <slot name="append-user" :user="user" />
       </template>
-      <v-container>
-        <slot name="extend-user" :user="user" />
-      </v-container>
+      <slot name="extend-user" :user="user" />
 
     </v-list-group>
   </v-list>

@@ -20,7 +20,7 @@
           @click="openUserCreateDialog()"
         > <v-icon x-large>mdi-plus</v-icon> </v-btn>
       </template>
-      <span>Vytvořit skupinu.</span>
+      <span>Vytvořit uživatele.</span>
     </v-tooltip>
 
     <FullDialog v-model="userCreateDialog" title="Vytvořit nového uživatele." closeable>
