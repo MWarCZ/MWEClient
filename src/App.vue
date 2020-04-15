@@ -1,14 +1,76 @@
 <template>
   <v-app>
-    <!-- <v-navigation-drawer app>
-    </v-navigation-drawer> -->
+    <v-navigation-drawer app
+      permanent
+      :mini-variant="miniMenu"
+      clipped
+      :expand-on-hover="miniMenu"
+    >
+      <v-list
+        nav
+      >
+        <!-- <v-list-item @click="toggleMenuSize">
+          <v-list-item-icon>
+            <v-icon>mdi-menu</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content></v-list-item-content>
+        </v-list-item> -->
+
+        <v-list-item to="/">
+          <v-list-item-icon>
+            <v-icon>mdi-home</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Home</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item to="/groups">
+          <v-list-item-icon>
+            <v-icon>mdi-account-group</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Skupiny</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item to="/users">
+          <v-list-item-icon>
+            <v-icon>mdi-account-multiple</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Uživatele</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item to="/processtemplates">
+          <v-list-item-icon>
+            <v-icon>mdi-book-multiple</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Šablony procesů</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item to="/login">
+          <v-list-item-icon>
+            <v-icon>mdi-key</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Login</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+      </v-list>
+
+    </v-navigation-drawer>
 
     <v-app-bar
       app
-      extended
-      hide-on-scroll
-      >
-      <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
+      clipped-left
+    >
+      <v-app-bar-nav-icon @click="toggleMenuSize"></v-app-bar-nav-icon>
+      <v-spacer/>
       <v-btn icon @click="log">
         <v-icon x-large>mdi-home</v-icon>
       </v-btn>
@@ -56,14 +118,16 @@
         </v-list>
       </v-menu>
 
-      <template #extension v-if="client">
+      <!-- <template #extension v-if="client">
         <v-tabs>
           <v-tab to="/">Home</v-tab>
           <v-tab to="/about">About</v-tab>
           <v-tab to="/groups">Groups</v-tab>
+          <v-tab to="/users">Users</v-tab>
+          <v-tab to="/processtemplates">Šablony procesů</v-tab>
           <v-tab to="/login">Login</v-tab>
         </v-tabs>
-      </template>
+      </template> -->
     </v-app-bar>
 
     <v-content>
@@ -111,12 +175,14 @@
 import Login from './components/Login'
 import gqlHello from './graphql/Hello.gql'
 import gqlHelloW from './graphql/HelloWorld.gql'
-import gqlClient from './graphql/Client.gql'
+import gqlClient from './graphql/auth/client.gql'
 // import gql from 'graphql-tag'
 import gqlConnected from './graphql/local/local.gql'
-import gqlLogin from './graphql/Login.gql'
+import gqlLogin from './graphql/auth/login.gql'
 import { onLogin, onLogout } from './vue-apollo'
 import FullDialog from './components/FullDialog'
+
+import { setSimulateLoading } from './simulateLoading'
 
 const SETTINGS_NIGHTMODE = 'NIGHTMODE'
 
@@ -139,9 +205,11 @@ export default {
       authAlertMessage: 'Nepodařilo se přihlásit.',
       authAlertType: 'error',
       checkLoginInLoop: false,
+      miniMenu: true,
     }
   },
   created () {
+    setSimulateLoading(true)
     const nightMode = JSON.parse(localStorage.getItem(SETTINGS_NIGHTMODE)) || false
     this.nightMode = nightMode
   },
@@ -190,6 +258,9 @@ export default {
     },
     toggleTheme (event) {
       console.log(event)
+    },
+    toggleMenuSize () {
+      this.miniMenu = !this.miniMenu
     },
     async login (payload) {
       try {

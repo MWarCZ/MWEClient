@@ -10,23 +10,48 @@
 
       <template #extend-group="{ group }">
         <v-container text-center>
-          <v-tooltip bottom>
-            <template #activator="{on}">
-              <v-btn fab small
-                color="primary"
-                v-on="on"
-                @click="1"
-              > <v-icon>mdi-plus</v-icon> </v-btn>
-            </template>
-            <span>Přidat uživatele do skupiny.</span>
-          </v-tooltip>
+          <v-toolbar>
+            <v-autocomplete
+              label="Přidat uživatele do skupiny"
+              :items="usersNonMemberProvider(group.members)"
+              v-model="selectedUser"
+              clearable
+            ></v-autocomplete>
+            <v-spacer></v-spacer>
+            <v-tooltip bottom>
+              <template #activator="{on}">
+                <div>
+                  <v-progress-circular v-if="actionWaiting" indeterminate />
+                  <v-btn v-else
+                    :disabled="!selectedUser"
+                    fab small
+                    color="primary"
+                    v-on="on"
+                    @click="shortcutTryAddMember(group.name, selectedUser.login)"
+                  > <v-icon>mdi-plus</v-icon> </v-btn>
+                </div>
+              </template>
+              <span>Přidat uživatele do skupiny.</span>
+            </v-tooltip>
+          </v-toolbar>
         </v-container>
 
         <GMList v-if="group"
           :members="group.members || []"
           :menuItems="memberMenuItems"
           @action="memberActionSwitch(group, $event)"
-          />
+        >
+          <template #append-item-title="{member}">
+            <v-tooltip bottom>
+              <template #activator="{on}">
+                <v-btn v-on="on" icon :to="`/users#${member.user.login}`">
+                  <v-icon>mdi-account-search</v-icon>
+                </v-btn>
+              </template>
+              <span>Přejit na uživatele '{{member.user.login}}'</span>
+            </v-tooltip>
+          </template>
+        </GMList>
 
       </template>
     </GList>
@@ -41,7 +66,7 @@
           right
           bottom
           x-large
-          @click="groupCreateDialog = true"
+          @click="openGroupCreateDialog"
         > <v-icon x-large>mdi-plus</v-icon> </v-btn>
       </template>
       <span>Vytvořit skupinu.</span>
@@ -66,13 +91,27 @@
         <v-alert type="error" :value="!!groupError">
           {{groupError}}
         </v-alert>
-        <GEditor v-if="selectedGroup"
+        <GEditor v-if="selectedGroup" :key="selectedGroup.name"
           :name="selectedGroup.name"
           :describe="selectedGroup.describe"
           readonlyName
           submitTitle="Uložit"
           :loading="actionWaiting"
           @success="tryUpdateGroup($event.name, $event.describe)"
+          />
+      </v-container>
+    </FullDialog>
+
+    <FullDialog v-model="addMembersDialog" title="Vytvořit novou skupinu" closeable>
+      <v-container>
+        <v-alert type="error" :value="!!groupError">
+          {{groupError}}
+        </v-alert>
+        <GMEditor
+          name=""
+          describe=""
+          :loading="actionWaiting"
+          @success="tryCreateGroup($event.name, $event.describe)"
           />
       </v-container>
     </FullDialog>
@@ -90,21 +129,45 @@
 </template>
 
 <script>
-// import ListGroups from '../components/ListGroupsWithFilter.vue'
 import GList from '../components/GList.vue'
 import GEditor from '../components/GEditor.vue'
 import GMList from '../components/GMList.vue'
 import FullDialog from '../components/FullDialog'
 import YesNoDialog from '../components/YesNoDialog'
 
-import gqlClient from '../graphql/Client.gql'
-import gqlGroups from '../graphql/Groups.gql'
+import { simulateLoading } from '../simulateLoading'
 
-import gqlRemoveGroup from '../graphql/removeGroup.gql'
-import gqlRecoverGroup from '../graphql/recoverGroup.gql'
+const gql = {
+  client: require('../graphql/auth/client.gql'),
+  // Group
+  groups: require('../graphql/group/groups.gql'),
+  createGroup: require('../graphql/group/createGroup.gql'),
+  updateGroupInfo: require('../graphql/group/updateGroupInfo.gql'),
+  removeGroup: require('../graphql/group/removeGroup.gql'),
+  deleteGroup: require('../graphql/group/deleteGroup.gql'),
+  recoverGroup: require('../graphql/group/recoverGroup.gql'),
+  // User
+  users: require('../graphql/user/users.gql'),
+  // Member
+  addMember: require('../graphql/member/addMember.gql'),
+  removeMember: require('../graphql/member/removeMember.gql'),
+  updateMember: require('../graphql/member/updateMember.gql'),
+}
 
 /** @typedef MenuItem
  *  @type { {icon:string, title:string, action:string} }
+ *
+ * @typedef User
+ * @type {{
+ *  id: number,
+ *  login: string,
+ *  email: string,
+ *  firstName: string,
+ *  lastName: string,
+ *  protected: boolean,
+ *  locked: boolean,
+ *  removed: boolean,
+ * }}
  */
 
 export default {
@@ -121,16 +184,19 @@ export default {
     return {
       client: null,
       groups: [],
+      /** @type {User[]} */
+      users: [],
 
       // Cekani na odpoved serveru - vyuzito v dialozich
       actionWaiting: false,
       groupError: '',
       selectedGroup: null,
       selectedMember: null,
+      selectedUser: null,
 
       groupCreateDialog: false,
-
       groupUpdateDialog: false,
+      addMembersDialog: false,
 
       ynDialog: false,
       ynTitle: '',
@@ -203,17 +269,40 @@ export default {
   apollo: {
     client () {
       return {
-        query: gqlClient,
+        query: gql.client,
       }
     },
     groups: {
-      query: gqlGroups,
+      query: gql.groups,
+    },
+    users: {
+      query: gql.users,
     },
   },
   methods: {
     log (...args) {
       console.log(...args)
     },
+
+    /** @param {{user?:User}[]} members */
+    usersNonMemberProvider (members = []) {
+      const skipUsers = members.map(member => member.user)
+      return this.usersProvider(skipUsers)
+    },
+    /** @param {User[]} skipUsers */
+    usersProvider (skipUsers = []) {
+      const skipLogins = skipUsers.map(user => user.login)
+      /** @type {User[]} */
+      const users = this.users.filter(user => {
+        return !skipLogins.includes(user.login) || !user.removed
+      })
+      const autocomplete = users.map(user => ({
+        text: `[${user.login}] ${user.lastName} ${user.firstName}`,
+        value: user,
+      }))
+      return autocomplete
+    },
+
     openYNDialog () {
       this.groupError = ''
       this.ynDialog = true
@@ -222,11 +311,19 @@ export default {
       this.groupError = ''
       this.ynDialog = false
     },
+    openGroupCreateDialog () {
+      this.groupError = ''
+      this.groupCreateDialog = true
+    },
+    openGroupUpdateDialog () {
+      this.groupError = ''
+      this.groupUpdateDialog = true
+    },
 
     memberActionSwitch (group, action) {
       console.log(action.item.action, action, group)
       this.selectedMember = action.member
-      const permission = { add: false, remove: false, show: false }
+      const permission = { add: undefined, remove: undefined, show: undefined }
       let selectedFn = () => {}
       this.openYNDialog()
 
@@ -278,7 +375,7 @@ export default {
       this.selectedGroup = action.group
       switch (action.item.action) {
         case 'update':
-          this.groupUpdateDialog = true
+          this.openGroupUpdateDialog()
           break
         case 'recorver':
           this.openYNDialog()
@@ -329,29 +426,88 @@ export default {
       return this.tryActionWrapper(async () => {
         await this.createGroup(name, describe)
         this.groupCreateDialog = false
+        this.groupError = ''
       })
     },
     tryUpdateGroup (name, describe) {
       return this.tryActionWrapper(async () => {
         await this.updateGroup(name, describe)
         this.groupUpdateDialog = false
+        this.groupError = ''
       })
+    },
+    shortcutTryAddMember (groupName, userLogin) {
+      this.openYNDialog()
+      this.ynTitle = `Chcete přidat uživatele '${userLogin}' do skupiny '${groupName}'?`
+      this.ynActionYes = () => {
+        this.tryActionWrapper(async () => {
+          await this.addMember(groupName, userLogin)
+          this.selectedUser = null
+          this.closeYNDialog()
+        })
+      }
+      this.ynActionYes()
     },
 
     // Upravy/Mutace nad Skupinou
     async createGroup (name, describe) {
       console.warn('TODO: createGroup', { name, describe })
-      await new Promise(resolve => setTimeout(_ => resolve(), 1000))
+      await simulateLoading()
+      await this.$apollo.mutate({
+        mutation: gql.createGroup,
+        variables: {
+          name,
+          describe,
+        },
+        update (proxy, { data: { createGroup } }) {
+          console.log(createGroup)
+          if (createGroup) {
+            const data = proxy.readQuery({
+              query: gql.groups,
+            })
+            createGroup.members = []
+            data.groups.push(createGroup)
+            proxy.writeQuery({
+              query: gql.groups,
+              data: data,
+            })
+          } // if (createGroup)
+        },
+      })
     },
     async updateGroup (name, describe) {
       console.warn('TODO: updateGroup', { name, describe })
-      await new Promise(resolve => setTimeout(_ => resolve(), 1000))
+      await simulateLoading()
+      await this.$apollo.mutate({
+        mutation: gql.updateGroupInfo,
+        variables: {
+          name,
+          describe,
+        },
+        update (proxy, { data: { updateGroupInfo } }) {
+          console.log(updateGroupInfo)
+          if (updateGroupInfo) {
+            const data = proxy.readQuery({
+              query: gql.groups,
+            })
+            data.groups.forEach(group => {
+              if (group.name === name) {
+                group.describe = describe
+              }
+            })
+            proxy.writeQuery({
+              query: gql.groups,
+              data: data,
+            })
+          } // if (updateGroupInfo)
+        },
+      })
     },
     async removeGroup (name) {
       console.warn('TODO: removeGroup', { name })
-      await new Promise(resolve => setTimeout(_ => resolve(), 1000))
+      await simulateLoading()
       await this.$apollo.mutate({
-        mutation: gqlRemoveGroup,
+        mutation: gql.removeGroup,
         variables: {
           name,
         },
@@ -359,9 +515,8 @@ export default {
           console.log(removeGroup)
           if (removeGroup) {
             const data = proxy.readQuery({
-              query: gqlGroups,
+              query: gql.groups,
             })
-            console.error(data)
             data.groups.forEach(group => {
               if (group.name === name) {
                 group.removed = true
@@ -369,7 +524,7 @@ export default {
               return group
             })
             proxy.writeQuery({
-              query: gqlGroups,
+              query: gql.groups,
               data: data,
             })
           } // if (removeGroup)
@@ -378,9 +533,9 @@ export default {
     },
     async recoverGroup (name) {
       console.warn('TODO: recorverGroup', { name })
-      await new Promise(resolve => setTimeout(_ => resolve(), 1000))
+      await simulateLoading()
       await this.$apollo.mutate({
-        mutation: gqlRecoverGroup,
+        mutation: gql.recoverGroup,
         variables: {
           name,
         },
@@ -388,9 +543,8 @@ export default {
           console.log(recoverGroup)
           if (recoverGroup) {
             const data = proxy.readQuery({
-              query: gqlGroups,
+              query: gql.groups,
             })
-            console.error(data)
             data.groups.forEach(group => {
               if (group.name === name) {
                 group.removed = false
@@ -398,7 +552,7 @@ export default {
               return group
             })
             proxy.writeQuery({
-              query: gqlGroups,
+              query: gql.groups,
               data: data,
             })
           } // if (recoverGroup)
@@ -407,24 +561,126 @@ export default {
     },
     async deleteGroup (name) {
       console.warn('TODO: deleteGroup', { name })
-      await new Promise(resolve => setTimeout(_ => resolve(), 1000))
+      await simulateLoading()
+      await this.$apollo.mutate({
+        mutation: gql.deleteGroup,
+        variables: {
+          name,
+        },
+        update (proxy, { data: { deleteGroup } }) {
+          console.log(deleteGroup)
+          if (deleteGroup) {
+            const data = proxy.readQuery({
+              query: gql.groups,
+            })
+            data.groups.find((group, index) => {
+              if (group.name === name) {
+                data.groups.splice(index, 1)
+                return true
+              }
+              return false
+            })
+            proxy.writeQuery({
+              query: gql.groups,
+              data: data,
+            })
+          } // if (recoverGroup)
+        },
+      })
     },
 
     // Upravy/Mutace nad Skupinou
     /** @param {{show:boolean, add:boolean, remove:boolean}} permission */
     async addMember (groupName, userLogin, permission = {}) {
       console.warn('TODO: addMember', { groupName, userLogin, permission })
-      await new Promise(resolve => setTimeout(_ => resolve(), 1000))
+      await simulateLoading()
+      await this.$apollo.mutate({
+        mutation: gql.addMember,
+        variables: {
+          name: groupName,
+          login: userLogin,
+        },
+        update (proxy, { data: { addMember } }) {
+          if (addMember) {
+            const data = proxy.readQuery({
+              query: gql.groups,
+            })
+
+            const group = data.groups.find(g => g.name === groupName)
+            group.members.push(addMember)
+            proxy.writeQuery({
+              query: gql.groups,
+              data: data,
+            })
+          } // if (addMember)
+        },
+      })
     },
-    /** @param {{show:boolean, add:boolean, remove:boolean}} permission */
-    async removeMember (groupName, userLogin, permission = {}) {
-      console.warn('TODO: removeMember', { groupName, userLogin, permission })
-      await new Promise(resolve => setTimeout(_ => resolve(), 1000))
+    async removeMember (groupName, userLogin) {
+      console.warn('TODO: removeMember', { groupName, userLogin })
+      await simulateLoading()
+      await this.$apollo.mutate({
+        mutation: gql.removeMember,
+        variables: {
+          name: groupName,
+          login: userLogin,
+        },
+        update (proxy, { data: { removeMember } }) {
+          if (removeMember) {
+            const data = proxy.readQuery({
+              query: gql.groups,
+            })
+
+            const group = data.groups.find(g => g.name === groupName)
+            group.members.find((member, index) => {
+              if (member.user.login === userLogin) {
+                group.members.splice(index, 1)
+                return true
+              }
+              return false
+            })
+            proxy.writeQuery({
+              query: gql.groups,
+              data: data,
+            })
+          } // if (addMember)
+        },
+      })
     },
     /** @param {{show:boolean, add:boolean, remove:boolean}} permission */
     async changeMemberPermission (groupName, userLogin, permission) {
       console.warn('TODO: changeMemberPermission', { groupName, userLogin, permission })
-      await new Promise(resolve => setTimeout(_ => resolve(), 1000))
+      await simulateLoading()
+      const { show = null, add = null, remove = null } = permission
+      await this.$apollo.mutate({
+        mutation: gql.updateMember,
+        variables: {
+          name: groupName,
+          login: userLogin,
+          addMember: add,
+          removeMember: remove,
+          showMembers: show,
+        },
+        update (proxy, { data: { updateMember } }) {
+          if (updateMember) {
+            const data = proxy.readQuery({
+              query: gql.groups,
+            })
+            const group = data.groups.find(g => g.name === groupName)
+            group.members.forEach(member => {
+              if (member.user.login === userLogin) {
+                member.addMember = updateMember.addMember
+                member.removeMember = updateMember.removeMember
+                member.showMembers = updateMember.showMembers
+              }
+            })
+            proxy.writeQuery({
+              query: gql.groups,
+              data: data,
+            })
+          } // if (recoverGroup)
+        },
+      })
     },
   },
 }

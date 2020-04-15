@@ -2,7 +2,7 @@
 // @emit success @param { name, describe }
 // @emit fail @param { name, describe }
 <template>
-  <v-form v-model="valid" ref="form" lazy-validation>
+  <v-form v-model="valid" ref="form">
     <v-row justify="center">
       <v-text-field
         label="Název"
@@ -11,6 +11,7 @@
         outlined
         required
         filled
+        :rules="[value=>!!value]"
         :hint="readonlyName?'Název není možné upravit.':''"
       ></v-text-field>
     </v-row>
@@ -57,6 +58,8 @@ export default {
       type: String,
       default: 'Odeslat',
     },
+    cleanOnSuccess: Boolean,
+    cleanOnFail: Boolean,
   },
   data () {
     return {
@@ -74,9 +77,19 @@ export default {
       this.$emit('submit', payload)
       if (this.valid) {
         this.$emit('success', payload)
+        if (this.cleanOnSuccess) {
+          this.restart()
+        }
       } else {
         this.$emit('fail', payload)
+        if (this.cleanOnFail) {
+          this.restart()
+        }
       }
+    },
+    restart () {
+      this.newName = this.name
+      this.newDescribe = this.describe
     },
   },
 

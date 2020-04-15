@@ -1,0 +1,13 @@
+#import "../fragments/GroupMembersFragment.gql"
+
+mutation updateMember(
+    $name: String!, $login:String!, 
+    $addMember: Boolean, $removeMember: Boolean, $showMembers: Boolean
+) {
+    updateMember: setMemberPermisions(
+        filter: {group: {name: $name},user:{login: $login}},
+        input: {addMember: $addMember, removeMember: $removeMember, showMembers: $showMembers}) 
+    {
+    ...GroupMembersFragment
+    }
+}

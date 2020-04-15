@@ -1,0 +1,4 @@
+
+mutation removeUser($login: String!) {
+    removeUser(filter: {login: $login})
+}

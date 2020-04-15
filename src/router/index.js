@@ -4,6 +4,8 @@ import VueRouter from 'vue-router'
 import Groups from '../views/Groups.vue'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
+import ProcessTemplates from '../views/ProcessTemplates.vue'
+import Users from '../views/Users.vue'
 
 Vue.use(VueRouter)
 
@@ -30,6 +32,16 @@ const routes = [
     path: '/groups',
     name: 'Groups',
     component: Groups,
+  },
+  {
+    path: '/users',
+    name: 'Users',
+    component: Users,
+  },
+  {
+    path: '/processtemplates',
+    name: 'ProcessTemplates',
+    component: ProcessTemplates,
   },
 ]
 

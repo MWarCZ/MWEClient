@@ -1,13 +1,15 @@
-// @emit action @param { item, group }
+// @emit action @param { item, user }
 <template>
   <v-list>
     <v-list-group
-      v-for="(group, index) in groups"
-      :key="`group-${index}`"
+      v-for="(user, index) in users"
+      :key="`user-${index}`"
+      :id="`${user.login}`"
       :class="{
-        removed: group.removed,
-        protected: group.protected,
-        normal: !group.removed && !group.protected,
+        protected: user.protected,
+        removed: user.removed,
+        locked: user.locked,
+        normal: !user.removed && !user.protected && !user.locked,
       }"
       :ripple="false"
       append-icon=""
@@ -18,27 +20,30 @@
         <v-list-item-action>
           <v-tooltip bottom>
             <template #activator="{on}">
-              <v-icon v-on="on" v-if="group.protected">mdi-shield</v-icon>
-              <v-icon v-on="on" v-else-if="group.removed">mdi-account-off-outline</v-icon>
+              <v-icon v-on="on" v-show="user.locked">mdi-lock</v-icon>
+
+              <v-icon v-on="on" v-if="user.protected">mdi-shield</v-icon>
+              <v-icon v-on="on" v-else-if="user.removed">mdi-account-off-outline</v-icon>
               <v-icon v-on="on" v-else>mdi-account</v-icon>
             </template>
-            <span v-if="group.protected">Skupina je chráněná před úpravami.</span>
-            <span v-else-if="group.removed">Skupina je smazána.</span>
-            <span v-else>Obyčejná skupina.</span>
+            <span v-if="user.protected">Uživatel je chráněn před úpravami.</span>
+            <span v-else-if="user.removed">Uživatel je smazán.</span>
+            <span v-else-if="user.locked">Uživatel je uzamknut.</span>
+            <span v-else>Obyčejný uživatel.</span>
           </v-tooltip>
         </v-list-item-action>
 
         <v-list-item-content>
-          <v-list-item-title v-text="group.name" />
-          <v-list-item-subtitle v-html="group.describe" />
+          <v-list-item-title v-text="`[${user.login}] ${user.lastName} ${user.firstName}`" />
+          <v-list-item-subtitle v-html="user.email" />
         </v-list-item-content>
 
-        <DotMenu :items="menuItems" @select="emitAction($event, group)" />
+        <DotMenu :items="menuItems" @select="emitAction($event, user)" />
 
-        <slot name="append-group" :group="group" />
+        <slot name="append-user" :user="user" />
       </template>
       <v-container>
-        <slot name="extend-group" :group="group" />
+        <slot name="extend-user" :user="user" />
       </v-container>
 
     </v-list-group>
@@ -59,19 +64,6 @@ export default {
     /**
      * @type new => {
      *  id: number,
-     *  name: string,
-     *  describe: string,
-     *  protected: boolean,
-     *  removed: boolean,
-     * }[]
-     */
-    groups: {
-      type: Array,
-      required: true,
-    },
-    /**
-     * @type new => {
-     *  id: number,
      *  login: string,
      *  email: string,
      *  firstName: string,
@@ -81,7 +73,10 @@ export default {
      *  removed: boolean,
      * }[]
      */
-    client: {},
+    users: {
+      type: Array,
+      required: true,
+    },
 
     /**
      * @type new => MenuItem[]
@@ -92,14 +87,17 @@ export default {
     },
   },
   methods: {
-    emitAction (item, group) {
-      this.$emit('action', { item, group })
+    emitAction (item, user) {
+      this.$emit('action', { item, user })
     },
   },
 
 }
 </script>
 <style lang="scss" scoped>
+  .locked {
+    background-color: #9e9e9e3b;
+  }
   .removed {
     background-color: #ff00002e;
   }

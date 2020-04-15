@@ -1,5 +1,5 @@
 
-fragment userMembership on Member {
+fragment UserMembershipFragment on Member {
     group{
         id
         name

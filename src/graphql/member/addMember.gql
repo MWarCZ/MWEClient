@@ -1,0 +1,15 @@
+#import "../fragments/GroupFragment.gql"
+#import "../fragments/GroupMembersFragment.gql"
+
+mutation addMember($name: String!, $login: String!) {
+  addMember(
+    filter:{
+      group: {name: $name}, 
+      user: {login: $login}
+    }) {
+    ...GroupMembersFragment
+    group {
+      ...GroupFragment
+    }
+  }
+}

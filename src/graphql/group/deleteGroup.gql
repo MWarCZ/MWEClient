@@ -1,0 +1,3 @@
+mutation deleteGroup($name: String!) {
+  deleteGroup(filter: {name: $name})
+}
