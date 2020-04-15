@@ -1,7 +1,13 @@
+// @emit submit Odesalani formulare.
+//  @param { login, password, expires }
+// @emit success Uspesne obdrzena odpoved s daty.
+//  @param { login, password, expires }
+// @emit fail Neuspesna odpoved nebo selhani spojeni.
+//  @param { login, password, expires }
 <template>
   <v-card :loading="loading">
-      <v-alert :type="alertLogin.type" dismissible v-model="alertLogin.show">
-        {{alertLogin.message}}
+      <v-alert :type="alertType" dismissible v-model="alertShow">
+        {{alertMessage}}
       </v-alert>
     <v-card-title primary-title>
       Přihlášení
@@ -13,6 +19,7 @@
           v-model="login"
           :rules="[value => !!value]"
           required
+          clearable
         ></v-text-field>
         <v-text-field
           label="Heslo"
@@ -21,7 +28,9 @@
           :rules="[value => !!value]"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :type="showPassword ? 'text' : 'password'"
+          clearable
           @click:append="showPassword = !showPassword"
+          @keydown.enter="submit"
         />
         <div class="text-center justify-center">
           <v-btn x-large icon disabled>
@@ -33,6 +42,13 @@
           <v-btn x-large icon disabled>
             <v-icon color="black">mdi-github</v-icon>
           </v-btn>
+        </div>
+        <div>
+          <v-radio-group v-model="expires" label="Limit platnosti přihlášení:">
+            <v-radio label="1 hodina" value="1h"></v-radio>
+            <v-radio label="8 hodin" value="8h"></v-radio>
+            <v-radio label="1 den" value="1d"></v-radio>
+          </v-radio-group>
         </div>
       </v-form>
     </v-card-text>
@@ -55,45 +71,51 @@
 </template>
 
 <script>
-// import axios from 'axios'
 
 export default {
+  props: {
+    loading: Boolean,
+    alertShow: {
+      type: Boolean,
+      default: false,
+    },
+    alertMessage: {
+      type: String,
+      default: 'Nepodarilo se neco.',
+    },
+    alertType: {
+      type: String,
+      default: 'error',
+    },
+  },
   data: () => ({
     valid: false,
     login: '',
     password: '',
     showPassword: false,
-    loading: false,
-    alertLogin: {
-      show: false,
-      message: 'Nepodarilo se prihlasit',
-      type: 'error',
-    },
+    expires: '1h',
   }),
 
   methods: {
     submit () {
-      if (this.$refs.form.validate()) {
-        // Native form submission is not yet supported
-        // axios.post('/api/submit', {
-        //   name: this.name,
-        //   email: this.email,
-        //   select: this.select,
-        //   checkbox: this.checkbox
-        // })
-        this.loading = true
-      }
       const valid = this.$refs.form.validate()
-      console.log('log', valid)
-      // this.$emit('submit:it', valid)
-      setTimeout(x => {
-        this.loading = false
-        // this.$emit('submit:it', valid)
-        this.alertLogin.show = true
-      }, 2000)
+      const payload = {
+        login: this.login,
+        password: this.password,
+        expires: this.expires,
+      }
+      this.$emit('submit', payload)
+      if (valid) {
+        this.$emit('success', payload)
+      } else {
+        this.$emit('fail', payload)
+      }
     },
     clear () {
       this.$refs.form.reset()
+    },
+    log (...args) {
+      console.log('ARGS', args)
     },
   },
 }

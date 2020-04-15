@@ -1,0 +1,10 @@
+fragment user on User {
+  id
+  login
+  email
+  firstName
+  lastName
+  protected
+  locked
+  removed
+}

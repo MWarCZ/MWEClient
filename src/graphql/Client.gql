@@ -1,0 +1,11 @@
+#import "./UserFragment.gql"
+#import "./UserMembershipFragment.gql"
+
+query client {
+  client: user {
+    ...user
+    membership {
+      ...userMembership
+    }
+  }
+}

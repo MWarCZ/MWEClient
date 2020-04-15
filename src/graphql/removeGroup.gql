@@ -1,0 +1,4 @@
+
+mutation removeGroup($name: String, $id: Int) {
+  removeGroup(filter:{name:$name, id: $id})
+}

@@ -1,0 +1,10 @@
+
+fragment userMembership on Member {
+    group{
+        id
+        name
+    }
+    addMember
+    removeMember
+    showMembers
+}
