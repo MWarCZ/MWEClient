@@ -2,18 +2,21 @@
 #import "../fragments/NodeInstanceFragmentExtend.gql"
 #import "../fragments/NodeTemplateFragment.gql"
 
-subscription changedNodeInstances {
-    changedNodeInstances {
+query NIsWithNT(
+    $status: String, 
+    $assigneeNullOnly: Boolean,
+    $forMeOnly: Boolean,
+) {
+	nodeInstances(filter: {
+        status:$status, 
+        assigneeNullOnly: $assigneeNullOnly,
+        forMeOnly: $forMeOnly,
+    }) {
         template {
             ...NodeTemplateFragment
         }
-        processInstance {
-            id
-        }
-        assignee {
-            id, login
-        }
         ...NodeInstanceFragment
         ...NodeInstanceFragmentExtend
+        assignee { id, login }
     }
 }

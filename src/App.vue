@@ -197,8 +197,8 @@ export default {
           icon: 'mdi-book-multiple',
         },
         {
-          link: '/processinstances',
-          title: 'Instance procesů',
+          link: '/nis4me',
+          title: 'Uzly pro mne',
           icon: 'mdi-book-multiple',
         },
         {

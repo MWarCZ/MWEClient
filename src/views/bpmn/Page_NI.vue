@@ -19,7 +19,7 @@
       v-model="expansionPanels"
       focusable accordion multiple
     >
-      <v-container class="text-center">
+      <v-container v-if="isNIWaiting" class="text-center">
 
         <v-btn v-if="isItClient(nodeInstance.assignee)"
           color="error" @click="sureReleaseNodeInstance({nodeInstance})">
@@ -31,6 +31,7 @@
         >
           Zabrat/Obsadit
         </v-btn>
+
       </v-container>
 
       <v-expansion-panel v-if="isItClient(nodeInstance.assignee)">
@@ -38,7 +39,9 @@
           <span class="display-1 text-center">Formulář s dodatky</span>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
-          <v-container class="text-center">
+          <v-container v-if="isNIWaiting"
+            class="text-center"
+          >
             <v-btn v-if="!nodeAdditionsFormat"
               color="info"
               @click="getAdditionsFormat()"
@@ -95,6 +98,9 @@
                 },
               ]"
             />
+          </v-container>
+          <v-container v-else class="text-center">
+            <h2>Formulář není možné vyplnit.</h2>
           </v-container>
 
         </v-expansion-panel-content>
@@ -206,7 +212,7 @@ export default {
   data () {
     return {
       client: null,
-      processInstance: null,
+      nodeInstance: null,
       expansionPanels: [0],
       nodeAdditionsFormat: null,
       loadAdditionFormat: false,
@@ -227,6 +233,9 @@ export default {
   computed: {
     routeId () {
       return Number(this.$route.params.id) || -1
+    },
+    isNIWaiting () {
+      return this.nodeInstance && this.nodeInstance.status.toLowerCase() === 'waiting'
     },
   },
   methods: {
