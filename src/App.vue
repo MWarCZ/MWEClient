@@ -182,16 +182,6 @@ export default {
           icon: 'mdi-home',
         },
         {
-          link: '/groups',
-          title: 'Skupiny',
-          icon: 'mdi-account-group',
-        },
-        {
-          link: '/users',
-          title: 'Uživatele',
-          icon: 'mdi-account-multiple',
-        },
-        {
           link: '/pts',
           title: 'Šablony procesů',
           icon: 'mdi-book-multiple',
@@ -202,9 +192,19 @@ export default {
           icon: 'mdi-book-multiple',
         },
         {
-          link: '/login',
-          title: 'Login',
-          icon: 'mdi-key',
+          link: '/mynis',
+          title: 'Moje uzly',
+          icon: 'mdi-book-multiple',
+        },
+        {
+          link: '/groups',
+          title: 'Skupiny',
+          icon: 'mdi-account-group',
+        },
+        {
+          link: '/users',
+          title: 'Uživatele',
+          icon: 'mdi-account-multiple',
         },
       ],
     }

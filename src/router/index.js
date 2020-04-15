@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+import PageMyNIs from '../views/bpmn/Page_MyNIs.vue'
 import PageNI from '../views/bpmn/Page_NI.vue'
 import PageNIs from '../views/bpmn/Page_NIs.vue'
 import PagePI from '../views/bpmn/Page_PI.vue'
@@ -39,6 +40,10 @@ const routes = [
   {
     path: '/nis4me',
     component: PageNIs,
+  },
+  {
+    path: '/mynis',
+    component: PageMyNIs,
   },
   {
     path: '/',

@@ -1,5 +1,8 @@
 <template>
   <v-container>
+
+    <h1 class="text-center">Uživatelé</h1>
+
     <UList
       :users="users"
       :menuItems="userMenuItems"

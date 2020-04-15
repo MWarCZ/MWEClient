@@ -6,11 +6,13 @@ query NIsWithNT(
     $status: String, 
     $assigneeNullOnly: Boolean,
     $forMeOnly: Boolean,
+    $assigneeIsMe: Boolean,
 ) {
 	nodeInstances(filter: {
         status:$status, 
         assigneeNullOnly: $assigneeNullOnly,
         forMeOnly: $forMeOnly,
+        assigneeIsMe: $assigneeIsMe,
     }) {
         template {
             ...NodeTemplateFragment

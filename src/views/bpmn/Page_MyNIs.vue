@@ -1,9 +1,9 @@
 <template>
   <v-container>
 
-    <h1 class="text-center">Uzly pro mne</h1>
+    <h1 class="text-center">Moje uzly</h1>
 
-    <NIFilter :value="NIsForMeProvider" statusReadonly statusValue="Waiting">
+    <NIFilter :value="NIsProvider" statusValue="Waiting">
       <template #default="{data}">
         <NIList
           :nodeInstances="[...data]"
@@ -26,14 +26,14 @@
               <v-list-item-subtitle>{{nodeInstance.assignee.login}}</v-list-item-subtitle>
             </v-list-item-content>
 
-            <v-tooltip bottom>
+            <v-tooltip bottom v-if="isNIWaiting(nodeInstance)">
               <template #activator="{on}">
-                <v-btn v-on="on" rounded color="success"
-                  @click="sureClaimNodeInstance({nodeInstance})">
-                  Zabrat/Obsadit
+                <v-btn v-on="on" rounded color="error"
+                  @click="sureReleaseNodeInstance({nodeInstance})">
+                  Uvolnit
                 </v-btn>
               </template>
-              Zabrat/Obsadit uzel
+              Uvolnit uzel
             </v-tooltip>
 
             <v-tooltip bottom>
@@ -100,9 +100,8 @@ export default {
       query: gql.nodeInstances,
       variables () {
         return {
-          status: 'waiting',
-          assigneeNullOnly: true,
-          forMeOnly: true,
+          // status: 'waiting',
+          assigneeIsMe: true,
         }
       },
       subscribeToMore: [
@@ -150,11 +149,6 @@ export default {
       /** @type MenuItem[] */
       nodeItems: [
         // {
-        //   icon: 'mdi-account-arrow-left',
-        //   title: 'Zabrat/Obsloužit',
-        //   action: 'claim',
-        // },
-        // {
         //   icon: 'mdi-account-arrow-right',
         //   title: 'Uvolnit',
         //   action: 'release',
@@ -163,10 +157,10 @@ export default {
     }
   },
   computed: {
-    NIsForMeProvider () {
+    NIsProvider () {
       if (!this.client) return []
-      const groupNames = this.client.membership.map(m => m.group.name)
-      const nodes = this.nodeInstances.filter(node => this.testNI(node, groupNames))
+      // const groupNames = this.client.membership.map(m => m.group.name)
+      const nodes = this.nodeInstances.filter(node => this.testNI(node))
       return nodes
     },
   },
@@ -174,8 +168,15 @@ export default {
     goToNI ({ id }) {
       this.$router.push({ path: `/ni/${id}` })
     },
-    testNI (node, groupNames) {
-      return !node.assignee && groupNames.includes(node.template.candidateAssignee)
+    testNI (node) {
+      try {
+        return node.assignee.id === this.client.id
+      } catch { return false }
+    },
+    isNIWaiting (node) {
+      try {
+        return node.status.toLowerCase() === 'waiting'
+      } catch { return false }
     },
     // =================
     openYNDialog (ynTitle, ynActionYes, ynActionNo) {
@@ -203,12 +204,12 @@ export default {
     },
     // ===========================
 
-    sureClaimNodeInstance ({ nodeInstance }) {
+    sureReleaseNodeInstance ({ nodeInstance }) {
       this.openYNDialog(
-        `Chcete zabrat/obsloužit instanci uzlu (${nodeInstance.id})?`,
+        `Chcete uvolnit instanci uzlu (${nodeInstance.id})?`,
         () => {
           this.tryActionWrapper(async () => {
-            await this.claimNodeInstance({ id: nodeInstance.id })
+            await this.releaseNodeInstance({ id: nodeInstance.id })
             this.closeYNDialog()
           })
         },
@@ -217,15 +218,16 @@ export default {
 
     // Mutace
 
-    async claimNodeInstance ({ id }) {
+    async releaseNodeInstance ({ id }) {
       await simulateLoading()
       await this.$apollo.mutate({
-        mutation: gql.claimNodeInstance,
+        mutation: gql.releaseNodeInstance,
         variables: {
           idNI: id,
         },
       })
     },
+
   },
 }
 </script>

@@ -15,19 +15,20 @@
       <template #activator>
 
         <slot name="prepend-item"  :nodeInstance="node" />
-
-        <v-list-item-action>
-          <NIIcon :status="node.status" />
-          <span>{{node.id}}</span>
-        </v-list-item-action>
-        <v-list-item-content>
-            <v-list-item-title>Započat:</v-list-item-title>
-            <v-list-item-subtitle>{{getNodeStart(node)}}</v-list-item-subtitle>
-        </v-list-item-content>
-        <v-list-item-content>
-            <v-list-item-title>Ukončen:</v-list-item-title>
-            <v-list-item-subtitle>{{getNodeEnd(node)}}</v-list-item-subtitle>
-        </v-list-item-content>
+        <slot :nodeInstance="node" >
+          <v-list-item-action>
+            <NIIcon :status="node.status" />
+            <span>{{node.id}}</span>
+          </v-list-item-action>
+          <v-list-item-content>
+              <v-list-item-title>Započat:</v-list-item-title>
+              <v-list-item-subtitle>{{getNodeStart(node)}}</v-list-item-subtitle>
+          </v-list-item-content>
+          <v-list-item-content>
+              <v-list-item-title>Ukončen:</v-list-item-title>
+              <v-list-item-subtitle>{{getNodeEnd(node)}}</v-list-item-subtitle>
+          </v-list-item-content>
+        </slot>
 
         <slot name="append-item"  :nodeInstance="node" />
 
