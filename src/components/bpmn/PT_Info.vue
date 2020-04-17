@@ -1,3 +1,5 @@
+// @slot prepend {process: PT}
+// @slot append {process: PT}
 <template>
   <div>
     <slot name="prepend" :process="process"></slot>

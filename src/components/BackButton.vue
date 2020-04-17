@@ -1,3 +1,4 @@
+// @emit click void #Jen pokud je nastaveno `disableGoBack`
 <template>
     <v-tooltip right>
       <template #activator="{on}">

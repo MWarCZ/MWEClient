@@ -121,7 +121,7 @@ import PTInfo from '../../components/bpmn/PT_Info'
 import YesNoDialog from '../../components/YesNoDialog'
 import FullDialog from '../../components/FullDialog'
 import PTEditor from '../../components/bpmn/PT_Editor'
-import BackButton from '../../components/backButton'
+import BackButton from '../../components/BackButton'
 
 import { simulateLoading } from '../../simulateLoading'
 
@@ -310,7 +310,7 @@ export default {
     // =============
 
     processInstanceActionSwitch (action) {
-      console.log(action.item.action, action)
+      // console.log(action.item.action, action)
       switch (action.item.action) {
         case 'delete':
           this.sureDeleteProcess(action)
@@ -327,7 +327,7 @@ export default {
         await asyncFn(...args)
       } catch (e) {
         this.msgError = (e.message) ? e.message : 'Něco se nepodařilo.'
-        console.error(e)
+        // console.error(e)
       }
       this.loading = false
     },
@@ -382,7 +382,6 @@ export default {
     // Mutation
 
     async updateProcess ({ id, name, isExecutable, candidateManager }) {
-      console.warn('TODO: updateProcessTemplate')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.updateProcessTemplate,
@@ -396,7 +395,6 @@ export default {
     },
 
     async deleteProcess ({ id }) {
-      console.warn('TODO: deleteProcessInstance')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.deleteProcessInstance,
@@ -407,7 +405,6 @@ export default {
     },
 
     async withdrawnProcess ({ id }) {
-      console.warn('TODO: withdrawnProcess')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.withdrawnProcess,
@@ -418,7 +415,6 @@ export default {
     },
 
     async initProcess ({ idProcessTemplate, idNodeTemplate }) {
-      console.warn('TODO: initProcess')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.initProcess,
@@ -433,7 +429,7 @@ export default {
       if (typeof implementation === 'string') {
         return implementation.toLowerCase().includes(text)
       }
-      console.warn('Chyba pri pokusu urcit implementaci: ', implementation)
+      // console.warn('Chyba pri pokusu urcit implementaci: ', implementation)
       return false
     },
   },

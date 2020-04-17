@@ -88,7 +88,7 @@ import PIInfo from '../../components/bpmn/PI_Info'
 import PTInfo from '../../components/bpmn/PT_Info'
 import YesNoDialog from '../../components/YesNoDialog'
 import FullDialog from '../../components/FullDialog'
-import BackButton from '../../components/backButton'
+import BackButton from '../../components/BackButton'
 
 import { simulateLoading } from '../../simulateLoading'
 
@@ -272,7 +272,7 @@ export default {
         await asyncFn(...args)
       } catch (e) {
         this.msgError = (e.message) ? e.message : 'Něco se nepodařilo.'
-        console.error(e)
+        // console.error(e)
       }
       this.loading = false
     },
@@ -316,7 +316,6 @@ export default {
     // Mutace
 
     async withdrawnProcess ({ id }) {
-      console.warn('TODO: withdrawnProcess')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.withdrawnProcess,
@@ -327,7 +326,6 @@ export default {
     },
 
     async claimNodeInstance ({ id }) {
-      console.warn('TODO: claimNodeInstance')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.claimNodeInstance,
@@ -337,7 +335,6 @@ export default {
       })
     },
     async releaseNodeInstance ({ id }) {
-      console.warn('TODO: releaseNodeInstance')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.releaseNodeInstance,

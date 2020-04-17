@@ -1,3 +1,4 @@
+// @emit submit AdditionsInput[]
 <template>
   <v-form>
     <template v-if="items.length>0" >
@@ -114,9 +115,7 @@ export default {
   },
   methods: {
     emitSubmit () {
-      console.log('submit1', this.inputs)
       const input = this.preparePayload(this.inputs)
-      console.log('submit2', input)
       this.$emit('submit', input)
     },
     normalizeInputs () {

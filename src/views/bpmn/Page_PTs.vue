@@ -149,8 +149,6 @@ export default {
         {
           document: gql.newProcessTemplates,
           updateQuery (previousResult, { subscriptionData }) {
-            console.warn('P:', previousResult)
-            console.warn('S', subscriptionData)
             if (!subscriptionData.data.newProcessTemplates) {
               return previousResult
             }
@@ -287,7 +285,7 @@ export default {
     // =============
 
     processTemplateActionSwitch (action) {
-      console.log(action.item.action, action)
+      // console.log(action.item.action, action)
       switch (action.item.action) {
         case 'update':
           this.selectedProcessTemplate = action.processTemplate
@@ -300,7 +298,7 @@ export default {
     },
 
     nodeTemplateActionSwitch (action) {
-      console.log(action.item.action, action)
+      // console.log(action.item.action, action)
       switch (action.item.action) {
         case 'init':
           this.sureInitProcess(action)
@@ -315,7 +313,7 @@ export default {
         await asyncFn(...args)
       } catch (e) {
         this.msgError = (e.message) ? e.message : 'Něco se nepodařilo.'
-        console.error(e)
+        // console.error(e)
       }
       this.loading = false
     },
@@ -364,7 +362,6 @@ export default {
     // Mutace
 
     async uploadProcess ({ xml }) {
-      console.warn('TODO: uploadProcess')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.uploadProcess,
@@ -374,7 +371,6 @@ export default {
       })
     },
     async initProcess ({ idProcessTemplate, idNodeTemplate }) {
-      console.warn('TODO: initProcess')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.initProcess,
@@ -384,7 +380,6 @@ export default {
       })
     },
     async deleteProcess ({ id }) {
-      console.warn('TODO: deleteProcessTemplate')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.deleteProcessTemplate,
@@ -394,7 +389,6 @@ export default {
       })
     },
     async updateProcess ({ id, name, isExecutable, candidateManager }) {
-      console.warn('TODO: updateProcessTemplate')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.updateProcessTemplate,

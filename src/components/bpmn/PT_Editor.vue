@@ -1,3 +1,6 @@
+// @emit submit { name: string, candidateManager: string, isExecutable: boolean }
+// @emit success { name: string, candidateManager: string, isExecutable: boolean }
+// @emit fail { name: string, candidateManager: string, isExecutable: boolean }
 <template>
   <v-form v-model="valid" ref="form">
 

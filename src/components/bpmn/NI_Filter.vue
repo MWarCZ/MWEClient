@@ -1,5 +1,5 @@
 // @emit input NI[]
-// @slot default
+// @slot default { data: NI[] }
 <template>
   <div>
     <v-toolbar
@@ -36,18 +36,21 @@
 <script>
 import { ActivityStatus } from '../helpers'
 /**
- * @typedef PI
+ * @typedef NI
  * @type {{
  *  id: number,
  *  startDateTime: string,
  *  endDateTime: string,
  *  status: string,
- *  nodeElements: NI[],
+ *  assignee: {
+ *    id: nubmer,
+ *    login: string,
+ *  },
  * }}
  */
 export default {
   props: {
-    /** @type {new=>PI[]} */
+    /** @type {new=>NI[]} */
     value: {
       type: Array,
       required: true,

@@ -1,7 +1,7 @@
-// @slot extend-node { nodeInstance }
-// @slot prepend-item { nodeInstance }
-// @slot append-item { nodeInstance }
-// @emit action { item, nodeInstance }
+// @slot extend-node { nodeInstance: NI }
+// @slot prepend-item { nodeInstance: NI }
+// @slot append-item { nodeInstance: NI }
+// @emit action { item: MenuItem, nodeInstance: NI }
 <template>
   <v-list>
     <v-list-group

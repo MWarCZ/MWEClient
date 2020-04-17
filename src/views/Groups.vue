@@ -281,10 +281,6 @@ export default {
     },
   },
   methods: {
-    log (...args) {
-      console.log(...args)
-    },
-
     /** @param {{user?:User}[]} members */
     usersNonMemberProvider (members = []) {
       const skipUsers = members.map(member => member.user)
@@ -322,7 +318,7 @@ export default {
     },
 
     memberActionSwitch (group, action) {
-      console.log(action.item.action, action, group)
+      // console.log(action.item.action, action, group)
       this.selectedMember = action.member
       const permission = { add: undefined, remove: undefined, show: undefined }
       let selectedFn = () => {}
@@ -372,7 +368,7 @@ export default {
       }
     },
     groupActionSwitch (action) {
-      console.log(action.item.action, action)
+      // console.log(action.item.action, action)
       this.selectedGroup = action.group
       switch (action.item.action) {
         case 'update':
@@ -418,7 +414,7 @@ export default {
         await asyncFn(...args)
       } catch (e) {
         this.groupError = (e.message) ? e.message : 'Nepodarilo se.'
-        console.error(e)
+        // console.error(e)
       }
       this.actionWaiting = false
     },
@@ -452,7 +448,6 @@ export default {
 
     // Upravy/Mutace nad Skupinou
     async createGroup (name, describe) {
-      console.warn('TODO: createGroup', { name, describe })
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.createGroup,
@@ -461,7 +456,6 @@ export default {
           describe,
         },
         update (proxy, { data: { createGroup } }) {
-          console.log(createGroup)
           if (createGroup) {
             const data = proxy.readQuery({
               query: gql.groups,
@@ -477,7 +471,6 @@ export default {
       })
     },
     async updateGroup (name, describe) {
-      console.warn('TODO: updateGroup', { name, describe })
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.updateGroupInfo,
@@ -486,7 +479,6 @@ export default {
           describe,
         },
         update (proxy, { data: { updateGroupInfo } }) {
-          console.log(updateGroupInfo)
           if (updateGroupInfo) {
             const data = proxy.readQuery({
               query: gql.groups,
@@ -505,7 +497,6 @@ export default {
       })
     },
     async removeGroup (name) {
-      console.warn('TODO: removeGroup', { name })
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.removeGroup,
@@ -513,7 +504,6 @@ export default {
           name,
         },
         update (proxy, { data: { removeGroup } }) {
-          console.log(removeGroup)
           if (removeGroup) {
             const data = proxy.readQuery({
               query: gql.groups,
@@ -533,7 +523,6 @@ export default {
       })
     },
     async recoverGroup (name) {
-      console.warn('TODO: recorverGroup', { name })
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.recoverGroup,
@@ -541,7 +530,6 @@ export default {
           name,
         },
         update (proxy, { data: { recoverGroup } }) {
-          console.log(recoverGroup)
           if (recoverGroup) {
             const data = proxy.readQuery({
               query: gql.groups,
@@ -561,7 +549,6 @@ export default {
       })
     },
     async deleteGroup (name) {
-      console.warn('TODO: deleteGroup', { name })
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.deleteGroup,
@@ -569,7 +556,6 @@ export default {
           name,
         },
         update (proxy, { data: { deleteGroup } }) {
-          console.log(deleteGroup)
           if (deleteGroup) {
             const data = proxy.readQuery({
               query: gql.groups,
@@ -593,7 +579,6 @@ export default {
     // Upravy/Mutace nad Skupinou
     /** @param {{show:boolean, add:boolean, remove:boolean}} permission */
     async addMember (groupName, userLogin, permission = {}) {
-      console.warn('TODO: addMember', { groupName, userLogin, permission })
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.addMember,
@@ -618,7 +603,6 @@ export default {
       })
     },
     async removeMember (groupName, userLogin) {
-      console.warn('TODO: removeMember', { groupName, userLogin })
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.removeMember,
@@ -650,7 +634,6 @@ export default {
     },
     /** @param {{show:boolean, add:boolean, remove:boolean}} permission */
     async changeMemberPermission (groupName, userLogin, permission) {
-      console.warn('TODO: changeMemberPermission', { groupName, userLogin, permission })
       await simulateLoading()
       const { show = null, add = null, remove = null } = permission
       await this.$apollo.mutate({

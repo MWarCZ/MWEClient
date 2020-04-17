@@ -114,9 +114,6 @@ export default {
     clear () {
       this.$refs.form.reset()
     },
-    log (...args) {
-      console.log('ARGS', args)
-    },
   },
 }
 </script>

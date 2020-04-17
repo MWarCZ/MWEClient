@@ -1,5 +1,5 @@
 // @emit input PI[]
-// @slot default
+// @slot default {data: PI[]}
 <template>
   <div>
     <v-toolbar

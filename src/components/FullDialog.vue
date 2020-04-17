@@ -1,3 +1,5 @@
+// @slot default void
+// @emit input value:Boolean
 <template>
   <v-dialog
     :value="value"

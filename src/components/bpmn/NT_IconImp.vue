@@ -36,7 +36,7 @@ export default {
       if (typeof implementation === 'string') {
         return implementation.toLowerCase().includes(text)
       }
-      console.warn('Chyba pri pokusu urcit implementaci: ', implementation)
+      // console.warn('Chyba pri pokusu urcit implementaci: ', implementation)
       return false
     },
   },

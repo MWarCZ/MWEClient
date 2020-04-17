@@ -1,7 +1,7 @@
-// @slot extend-process { processInstance }
-// @slot prepend-item { processInstance }
-// @slot append-item { processInstance }
-// @emit action { item, processInstance }
+// @slot extend-process { processInstance: PI }
+// @slot prepend-item { processInstance: PI }
+// @slot append-item { processInstance: PI }
+// @emit action { item: MenuItem, processInstance: PI }
 <template>
   <v-list>
     <v-list-group

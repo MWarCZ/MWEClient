@@ -133,7 +133,7 @@ import NIInfo from '../../components/bpmn/NI_Info'
 import NTInfo from '../../components/bpmn/NT_Info'
 import YesNoDialog from '../../components/YesNoDialog'
 import FullDialog from '../../components/FullDialog'
-import BackButton from '../../components/backButton'
+import BackButton from '../../components/BackButton'
 import AdditionsForm from '../../components/bpmn/AdditionsForm'
 
 import { simulateLoading } from '../../simulateLoading'
@@ -246,9 +246,7 @@ export default {
     // =====
     isClientInGroup (groupName) {
       try {
-        console.log('Client:', this.client)
         const names = this.client.members.map(m => m.group.name)
-        console.log({ names })
         return names.includes(groupName)
       } catch {
         return false
@@ -292,7 +290,7 @@ export default {
         await asyncFn(...args)
       } catch (e) {
         this.msgError = (e.message) ? e.message : 'Něco se nepodařilo.'
-        console.error(e)
+        // console.error(e)
       }
       this.loading = false
     },
@@ -336,7 +334,6 @@ export default {
     // Mutace
 
     async claimNodeInstance ({ id }) {
-      console.warn('TODO: claimNodeInstance')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.claimNodeInstance,
@@ -346,7 +343,6 @@ export default {
       })
     },
     async releaseNodeInstance ({ id }) {
-      console.warn('TODO: releaseNodeInstance')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.releaseNodeInstance,
@@ -357,7 +353,6 @@ export default {
     },
 
     async nodeAdditions ({ id, input }) {
-      console.warn('TODO: nodeAdditions')
       await simulateLoading()
       await this.$apollo.mutate({
         mutation: gql.nodeAdditions,

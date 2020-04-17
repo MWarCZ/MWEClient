@@ -1,6 +1,6 @@
-// @emit submit @param { bpmnText }
-// @emit success @param { bpmnText }
-// @emit fail @param { bpmnText }
+// @emit submit { bpmnText: string }
+// @emit success { bpmnText: string }
+// @emit fail { bpmnText: string }
 <template>
   <v-form v-model="valid" ref="form">
     <v-row justify="center">
@@ -131,9 +131,6 @@ export default {
       this.bpmnFile = undefined
       this.bpmnUrl = ''
       this.newBpmnText = this.bpmnText = ''
-    },
-    log (...args) {
-      console.warn(args)
     },
 
     loadUrlFromText (text) {
