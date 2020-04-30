@@ -2,56 +2,71 @@
   <v-container>
 
     <BackButton />
+    <BackButton disableGoBack
+      hint="Přejit na šablonu procesu"
+      icon="mdi-book"
+      :relativeLeft="100"
+      @click="goToProcessTemplate"
+    />
 
     <h1 class="text-center">Instance procesu</h1>
 
-    <PIInfo v-if="processInstance" :process="processInstance"></PIInfo>
-    <h2 class="text-center" v-else>Nenalezena.</h2>
+    <template v-if="processInstance">
 
-    <h2 class="text-center">Šablona procesu</h2>
+      <PIInfo :process="processInstance"></PIInfo>
 
-    <PTInfo v-if="processInstance && processInstance.template"
-      :process="processInstance.template"
-    ></PTInfo>
-    <h2 class="text-center" v-else>Nenalezena.</h2>
+      <h2 class="text-center">Šablona procesu</h2>
 
-    <v-expansion-panels
-      v-if="processInstance"
-      v-model="expansionPanels"
-      focusable accordion multiple
-    >
+      <PTInfo v-if="processInstance.template"
+        :process="processInstance.template"
+      ></PTInfo>
+      <h2 class="text-center" v-else>Nenalezena.</h2>
 
-      <v-expansion-panel>
-        <v-expansion-panel-header>
-          <span class="display-1 text-center">Instance uzlů</span>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
+      <v-expansion-panels
+        v-if="processInstance"
+        v-model="expansionPanels"
+        focusable accordion multiple
+      >
 
-          <NIFilter :value="processInstance.nodeElements">
-            <template #default="{data}">
-              <NIList
-                :nodeInstances="[...data].reverse()"
-                :menuItems="nodeItems"
-                @action="1"
-              >
-                <template #append-item="{nodeInstance}">
-                  <v-list-item-content v-if="nodeInstance.assignee">
-                    <v-list-item-title>Nabyvatel</v-list-item-title>
-                    <v-list-item-subtitle>{{nodeInstance.assignee.login}}</v-list-item-subtitle>
-                  </v-list-item-content>
-                  <v-btn color="info" @click="goToNI(nodeInstance)">
-                    <v-icon>mdi-information-outline</v-icon>
-                    Zobrazit
-                  </v-btn>
-                </template>
-              </NIList>
-            </template>
-          </NIFilter>
+        <v-expansion-panel>
+          <v-expansion-panel-header>
+            <span class="display-1 text-center">Instance uzlů</span>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
 
-        </v-expansion-panel-content>
-      </v-expansion-panel>
+            <NIFilter :value="processInstance.nodeElements">
+              <template #default="{data}">
+                <NIList
+                  :nodeInstances="[...data].reverse()"
+                  :menuItems="nodeItems"
+                  @action="1"
+                >
+                  <template #append-item="{nodeInstance}">
+                    <v-list-item-content v-if="nodeInstance.assignee">
+                      <v-list-item-title>Nabyvatel</v-list-item-title>
+                      <v-list-item-subtitle>{{nodeInstance.assignee.login}}</v-list-item-subtitle>
+                    </v-list-item-content>
+                    <v-btn color="info" @click="goToNI(nodeInstance)">
+                      <v-icon>mdi-information-outline</v-icon>
+                      Zobrazit
+                    </v-btn>
+                  </template>
+                </NIList>
+              </template>
+            </NIFilter>
 
-    </v-expansion-panels>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+
+      </v-expansion-panels>
+
+    </template>
+    <template v-else-if="$apollo.queries.processInstance.loading">
+      <h2 class="text-center">Načítání ...</h2>
+    </template>
+    <template v-else>
+      <h2 class="text-center">Nenalezena.</h2>
+    </template>
 
     <FullDialog v-model="fsDialog" :title="fsTitle" closeable>
       <v-container>
@@ -239,6 +254,13 @@ export default {
     },
     goBack () {
       this.$route.go(-1)
+    },
+
+    goToProcessTemplate () {
+      try {
+        const id = this.processInstance.template.id
+        this.$router.push({ path: `/pt/${id}` })
+      } catch { }
     },
     // =================
     openYNDialog (ynTitle, ynActionYes, ynActionNo) {

@@ -7,6 +7,9 @@ query NIWithNT($id: Int!) {
         template {
             ...NodeTemplateFragment
         }
+        processInstance {
+            id
+        }
         ...NodeInstanceFragment
         ...NodeInstanceFragmentExtend
     }
