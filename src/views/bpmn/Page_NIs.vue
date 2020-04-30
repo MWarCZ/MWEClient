@@ -175,7 +175,9 @@ export default {
       this.$router.push({ path: `/ni/${id}` })
     },
     testNI (node, groupNames) {
-      return !node.assignee && groupNames.includes(node.template.candidateAssignee)
+      const isTask = node.template.implementation.includes('Task')
+      return !node.assignee && groupNames.includes(node.template.candidateAssignee) &&
+        isTask
     },
     // =================
     openYNDialog (ynTitle, ynActionYes, ynActionNo) {

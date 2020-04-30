@@ -38,9 +38,9 @@
     >
       <v-app-bar-nav-icon @click="toggleMenuSize"></v-app-bar-nav-icon>
       <v-spacer/>
-      <v-btn icon @click="log">
+      <!-- <v-btn icon @click="log">
         <v-icon x-large>mdi-home</v-icon>
-      </v-btn>
+      </v-btn> -->
       <v-toolbar-title>MWEClient</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn icon @click="nightMode = !nightMode">

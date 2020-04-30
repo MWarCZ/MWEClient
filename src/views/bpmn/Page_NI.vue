@@ -1,6 +1,12 @@
 <template>
   <v-container>
     <BackButton />
+    <BackButton disableGoBack
+      hint="Přejit na instanci procesu"
+      icon="mdi-book"
+      :relativeLeft="100"
+      @click="goToProcessInstance"
+    />
 
     <h1 class="text-center">Instance uzlu</h1>
 
@@ -256,6 +262,13 @@ export default {
       try {
         return assignee.id === this.client.id || assignee.login === this.client.login
       } catch { return false }
+    },
+
+    goToProcessInstance () {
+      try {
+        const id = this.nodeInstance.processInstance.id
+        this.$router.push({ path: `/pi/${id}` })
+      } catch { }
     },
 
     // =================

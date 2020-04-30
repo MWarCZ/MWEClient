@@ -203,7 +203,7 @@ export default {
     /** @param {AdditionsFormat} item  */
     getMaxForRange (item) {
       const possibilities = (Array.isArray(item.possibilities)) ? item.possibilities : []
-      return possibilities[0] || 100
+      return possibilities[2] || 100
     },
   },
 }

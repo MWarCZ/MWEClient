@@ -2,6 +2,12 @@
   <v-container>
 
     <BackButton />
+    <BackButton disableGoBack
+      hint="Přejit na šablonu procesu"
+      icon="mdi-book"
+      :relativeLeft="100"
+      @click="goToProcessTemplate"
+    />
 
     <h1 class="text-center">Instance procesu</h1>
 
@@ -239,6 +245,13 @@ export default {
     },
     goBack () {
       this.$route.go(-1)
+    },
+
+    goToProcessTemplate () {
+      try {
+        const id = this.processInstance.template.id
+        this.$router.push({ path: `/pt/${id}` })
+      } catch { }
     },
     // =================
     openYNDialog (ynTitle, ynActionYes, ynActionNo) {
