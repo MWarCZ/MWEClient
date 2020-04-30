@@ -237,7 +237,7 @@ export default {
         query: gqlClient,
         update (data) {
           if (data.client) {
-            this.$apollo.queries.client.startPolling(1000 * 15)
+            this.$apollo.queries.client.startPolling(1000 * 60)
           } else {
             this.$apollo.queries.client.stopPolling()
             this.authAlertShow = false

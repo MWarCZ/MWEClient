@@ -52,6 +52,17 @@
           persistent-hint
         ></v-switch>
 
+        <div
+          v-else-if="selectElementType(item) === Types.html"
+          :key="index"
+          v-html="item.hints"
+        ></div>
+
+        <div
+          v-else-if="selectElementType(item) === Types.hidden"
+          :key="index"
+        ></div>
+
         <v-text-field
           v-else
           :key="index"
@@ -62,7 +73,9 @@
           persistent-hint
           disabled
         />
+
       </template>
+      <br />
 
     </template>
 
@@ -97,6 +110,8 @@ const Types = {
   file: 'file',
   range: 'range',
   select: 'select',
+  html: 'html',
+  hidden: 'hidden',
 }
 
 export default {
@@ -177,6 +192,8 @@ export default {
         case 'file': return 'file'
         case 'range': return 'range'
         case 'select': return 'select'
+        case 'html': return 'html'
+        case 'hidden': return 'hidden'
       }
       return 'unknown'
     },
