@@ -15,104 +15,113 @@
 
     <h2 class="text-center">Šablona uzlu</h2>
 
-    <NTInfo v-if="nodeInstance && nodeInstance.template"
-      :node="nodeInstance.template"
-    ></NTInfo>
-    <h2 class="text-center" v-else>Nenalezena.</h2>
+    <template v-if="nodeInstance">
 
-    <v-expansion-panels
-      v-if="nodeInstance"
-      v-model="expansionPanels"
-      focusable accordion multiple
-    >
-      <v-container v-if="isNIWaiting" class="text-center">
+      <NTInfo v-if="nodeInstance.template"
+        :node="nodeInstance.template"
+      ></NTInfo>
+      <h2 class="text-center" v-else>Nenalezena.</h2>
 
-        <v-btn v-if="isItClient(nodeInstance.assignee)"
-          color="error" @click="sureReleaseNodeInstance({nodeInstance})">
-          Uvolnit
-        </v-btn>
-        <v-btn v-else
-          color="success"
-          @click="sureClaimNodeInstance({nodeInstance})"
-        >
-          Zabrat/Obsadit
-        </v-btn>
+      <v-expansion-panels
+        v-model="expansionPanels"
+        focusable accordion multiple
+      >
+        <v-container v-if="isNIWaiting" class="text-center">
 
-      </v-container>
-
-      <v-expansion-panel v-if="isItClient(nodeInstance.assignee)">
-        <v-expansion-panel-header>
-          <span class="display-1 text-center">Formulář s dodatky</span>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <v-container v-if="isNIWaiting"
-            class="text-center"
+          <v-btn v-if="isItClient(nodeInstance.assignee)"
+            color="error" @click="sureReleaseNodeInstance({nodeInstance})">
+            Uvolnit
+          </v-btn>
+          <v-btn v-else
+            color="success"
+            @click="sureClaimNodeInstance({nodeInstance})"
           >
-            <v-btn v-if="!nodeAdditionsFormat"
-              color="info"
-              @click="getAdditionsFormat()"
-            >Našist formulář</v-btn>
+            Zabrat/Obsadit
+          </v-btn>
 
-            <AdditionsForm v-else
-              :items="nodeAdditionsFormat"
-              @submit="sureNodeAdditions({ nodeInstance, input: $event})"
-              :itemsX="[
-                {
-                  name: 'CheckBox',
-                  type: 'checkbox',
-                  default: 'true',
-                },
-                {
-                  name: 'Color',
-                  type: 'color',
-                },
-                //===============
-                {
-                  name: 'email',
-                  type: 'email',
-                },
-                {
-                  name: 'number',
-                  type: 'number',
-                },
-                {
-                  name: 'password',
-                  type: 'password',
-                },
-                //===============
-                {
-                  name: 'range',
-                  type: 'range',
-                },
-                {
-                  name: 'search',
-                  type: 'search',
-                },
-                {
-                  name: 'tel',
-                  type: 'tel',
-                },
-                //==========
-                {
-                  name: 'select',
-                  type: 'select',
-                },
-                {
-                  name: 'XSelect',
-                  type: 'select',
-                  possibilities: ['Ano', 'Ne']
-                },
-              ]"
-            />
-          </v-container>
-          <v-container v-else class="text-center">
-            <h2>Formulář není možné vyplnit.</h2>
-          </v-container>
+        </v-container>
 
-        </v-expansion-panel-content>
-      </v-expansion-panel>
+        <v-expansion-panel v-if="isItClient(nodeInstance.assignee)">
+          <v-expansion-panel-header>
+            <span class="display-1 text-center">Formulář s dodatky</span>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <v-container v-if="isNIWaiting"
+              class="text-center"
+            >
+              <v-btn v-if="!nodeAdditionsFormat"
+                color="info"
+                @click="getAdditionsFormat()"
+              >Našist formulář</v-btn>
 
-    </v-expansion-panels>
+              <AdditionsForm v-else
+                :items="nodeAdditionsFormat"
+                @submit="sureNodeAdditions({ nodeInstance, input: $event})"
+                :itemsX="[
+                  {
+                    name: 'CheckBox',
+                    type: 'checkbox',
+                    default: 'true',
+                  },
+                  {
+                    name: 'Color',
+                    type: 'color',
+                  },
+                  //===============
+                  {
+                    name: 'email',
+                    type: 'email',
+                  },
+                  {
+                    name: 'number',
+                    type: 'number',
+                  },
+                  {
+                    name: 'password',
+                    type: 'password',
+                  },
+                  //===============
+                  {
+                    name: 'range',
+                    type: 'range',
+                  },
+                  {
+                    name: 'search',
+                    type: 'search',
+                  },
+                  {
+                    name: 'tel',
+                    type: 'tel',
+                  },
+                  //==========
+                  {
+                    name: 'select',
+                    type: 'select',
+                  },
+                  {
+                    name: 'XSelect',
+                    type: 'select',
+                    possibilities: ['Ano', 'Ne']
+                  },
+                ]"
+              />
+            </v-container>
+            <v-container v-else class="text-center">
+              <h2>Formulář není možné vyplnit.</h2>
+            </v-container>
+
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+
+      </v-expansion-panels>
+
+    </template>
+    <template v-else-if="$apollo.queries.nodeInstance.loading">
+      <h2 class="text-center">Načítání ...</h2>
+    </template>
+    <template v-else>
+      <h2 class="text-center">Nenalezena.</h2>
+    </template>
 
     <FullDialog v-model="fsDialog" :title="fsTitle" closeable>
       <v-container>

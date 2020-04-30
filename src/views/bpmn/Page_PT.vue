@@ -4,69 +4,77 @@
 
     <h1 class="text-center">Šablona procesu</h1>
 
-    <PTInfo v-if="processTemplate" :process="processTemplate"></PTInfo>
-    <h2 class="text-center" v-else>Nenalezena.</h2>
+    <template v-if="processTemplate">
 
-    <v-expansion-panels
-      v-if="processTemplate"
-      v-model="expansionPanels"
-      focusable accordion multiple
-    >
+      <PTInfo :process="processTemplate"></PTInfo>
 
-      <v-expansion-panel>
-        <v-expansion-panel-header>
-          <span class="display-1 text-center">Šablony uzlů</span>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
+      <v-expansion-panels
+        v-model="expansionPanels"
+        focusable accordion multiple
+      >
 
-          <NTList :nodeTemplates="processTemplate.nodeElements">
-            <template #append-item="{nodeTemplate}">
-              {{nodeTemplate.implementation}}
-              <v-tooltip bottom v-if="textContains(nodeTemplate.implementation, 'startevent')">
-                <template #activator="{on}">
-                  <v-btn
-                    fab
-                    color="primary"
-                    v-on="on"
-                    @click="sureInitProcess({processTemplate, nodeTemplate})"
-                    small
-                  > <v-icon>mdi-play</v-icon> </v-btn>
-                </template>
-                <span>Spustit proces na udalosti {{nodeTemplate.name}}</span>
-              </v-tooltip>
-            </template>
-          </NTList>
+        <v-expansion-panel>
+          <v-expansion-panel-header>
+            <span class="display-1 text-center">Šablony uzlů</span>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
 
-        </v-expansion-panel-content>
-      </v-expansion-panel>
+            <NTList :nodeTemplates="processTemplate.nodeElements">
+              <template #append-item="{nodeTemplate}">
+                {{nodeTemplate.implementation}}
+                <v-tooltip bottom v-if="textContains(nodeTemplate.implementation, 'startevent')">
+                  <template #activator="{on}">
+                    <v-btn
+                      fab
+                      color="primary"
+                      v-on="on"
+                      @click="sureInitProcess({processTemplate, nodeTemplate})"
+                      small
+                    > <v-icon>mdi-play</v-icon> </v-btn>
+                  </template>
+                  <span>Spustit proces na udalosti {{nodeTemplate.name}}</span>
+                </v-tooltip>
+              </template>
+            </NTList>
 
-      <v-expansion-panel>
-        <v-expansion-panel-header>
-          <span class="display-1 text-center">Instance procesů</span>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
 
-          <PIFilter :value="processTemplate.instances">
-            <template #default="{data}">
-              <PIList
-                :processInstances="[...data].reverse()"
-                :menuItems="processInstanceMenuItems"
-                @action="processInstanceActionSwitch"
-              >
-                <template #append-item="{processInstance}">
-                  <v-btn color="info" @click="goToPI(processInstance)">
-                    <v-icon>mdi-information-outline</v-icon>
-                    Zobrazit
-                  </v-btn>
-                </template>
-              </PIList>
-            </template>
-          </PIFilter>
+        <v-expansion-panel>
+          <v-expansion-panel-header>
+            <span class="display-1 text-center">Instance procesů</span>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
 
-        </v-expansion-panel-content>
-      </v-expansion-panel>
+            <PIFilter :value="processTemplate.instances">
+              <template #default="{data}">
+                <PIList
+                  :processInstances="[...data].reverse()"
+                  :menuItems="processInstanceMenuItems"
+                  @action="processInstanceActionSwitch"
+                >
+                  <template #append-item="{processInstance}">
+                    <v-btn color="info" @click="goToPI(processInstance)">
+                      <v-icon>mdi-information-outline</v-icon>
+                      Zobrazit
+                    </v-btn>
+                  </template>
+                </PIList>
+              </template>
+            </PIFilter>
 
-    </v-expansion-panels>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+
+      </v-expansion-panels>
+
+    </template>
+    <template v-else-if="$apollo.queries.processTemplate.loading">
+      <h2 class="text-center">Načítání ...</h2>
+    </template>
+    <template v-else>
+      <h2 class="text-center">Nenalezena.</h2>
+    </template>
 
     <!-- update btn -->
     <v-tooltip left>
