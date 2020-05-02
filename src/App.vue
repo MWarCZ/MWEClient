@@ -210,7 +210,7 @@ export default {
     }
   },
   created () {
-    setSimulateLoading(true)
+    setSimulateLoading(false)
     const nightMode = JSON.parse(localStorage.getItem(SETTINGS_NIGHTMODE)) || false
     this.nightMode = nightMode
   },
@@ -255,10 +255,10 @@ export default {
       this.$vuetify.theme.dark = value
     },
     log () {
-      console.log(this)
+      // console.log(this)
     },
     toggleTheme (event) {
-      console.log(event)
+      // console.log(event)
     },
     toggleMenuSize () {
       this.miniMenu = !this.miniMenu
@@ -289,7 +289,7 @@ export default {
         this.authAlertShow = true
         this.authAlertMessage = e.message
         this.authAlertType = 'error'
-        console.error(e)
+        // console.error(e)
       }
       this.authLoading = false
     },

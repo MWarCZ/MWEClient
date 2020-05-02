@@ -28,7 +28,7 @@
 
     <FullDialog v-model="userCreateDialog" title="Vytvořit nového uživatele." closeable>
       <v-container>
-        <v-alert type="error" :value="!!msgError">
+        <v-alert type="error" :value="!!msgError" dismissible>
           {{msgError}}
         </v-alert>
         <UCreateEditor
@@ -43,19 +43,45 @@
 
     <FullDialog v-model="userUpdateDialog" title="Upravit uživatele." closeable>
       <v-container>
-        <v-alert type="error" :value="!!msgError">
+        <v-alert type="error" :value="!!msgError" dismissible>
           {{msgError}}
         </v-alert>
-        <UEditor v-if="selectedUser" :key="selectedUser.login"
+        <v-alert type="success" :value="!!msgSuccess" dismissible>
+          {{msgSuccess}}
+        </v-alert>
+        <v-container>
+          <UEditor v-if="selectedUser" :key="`${selectedUser.login}-1`"
+            :loading="actionWaiting"
+            :login="selectedUser.login"
+            :email="selectedUser.email"
+            :firstName="selectedUser.firstName"
+            :lastName="selectedUser.lastName"
+            readonlyLogin
+            submitTitle="Uložit"
+            @success="tryUpdateUser($event)"
+            />
+        </v-container>
+
+        <v-container>
+          <UChangePassword v-if="selectedUser" :key="`${selectedUser.login}-2`"
           :loading="actionWaiting"
-          :login="selectedUser.login"
-          :email="selectedUser.email"
-          :firstName="selectedUser.firstName"
-          :lastName="selectedUser.lastName"
-          readonlyLogin
-          submitTitle="Uložit"
-          @success="tryUpdateUser($event)"
+          submitTitle="Změnit heslo"
+          @success="tryChangeUserPassword( {...$event, login: selectedUser.login })"
           />
+        </v-container>
+        <v-container>
+          <v-row justify="center">
+            <v-btn
+              @click="tryResetUserPassword(selectedUser)"
+              color="warning"
+              block
+            >
+              <v-progress-circular v-if="actionWaiting" indeterminate />
+              <span v-else>Reset Hesla</span>
+            </v-btn>
+          </v-row>
+        </v-container>
+
       </v-container>
     </FullDialog>
 
@@ -63,7 +89,7 @@
       :loading="actionWaiting"
       @yes="ynActionYes" @no="ynActionNo"
     >
-      <v-alert type="error" :value="!!msgError">
+      <v-alert type="error" :value="!!msgError" dismissible>
         {{msgError}}
       </v-alert>
     </YesNoDialog>
@@ -76,6 +102,7 @@ import UEditor from '../components/UEditor.vue'
 import UCreateEditor from '../components/UCreateEditor.vue'
 import FullDialog from '../components/FullDialog'
 import YesNoDialog from '../components/YesNoDialog'
+import UChangePassword from '../components/UChangePassword.vue'
 
 import { simulateLoading } from '../simulateLoading'
 
@@ -92,6 +119,9 @@ const gql = {
   recoverUser: require('../graphql/user/recoverUser.gql'),
   lockUser: require('../graphql/user/lockUser.gql'),
   unlockUser: require('../graphql/user/unlockUser.gql'),
+
+  resetUserPassword: require('../graphql/user/resetUserPassword.gql'),
+  changeUserPassword: require('../graphql/user/changeUserPassword.gql'),
 }
 
 /** @typedef MenuItem
@@ -116,6 +146,7 @@ export default {
     FullDialog,
     UCreateEditor,
     YesNoDialog,
+    UChangePassword,
   },
   data () {
     return {
@@ -127,6 +158,7 @@ export default {
       selectedUser: null,
 
       msgError: '',
+      msgSuccess: '',
       actionWaiting: false,
 
       ynDialog: false,
@@ -181,19 +213,23 @@ export default {
   },
   methods: {
     openYNDialog () {
+      this.msgSuccess = ''
       this.msgError = ''
       this.ynDialog = true
     },
     closeYNDialog () {
+      this.msgSuccess = ''
       this.msgError = ''
       this.ynDialog = false
     },
     openUserCreateDialog () {
+      this.msgSuccess = ''
       this.msgError = ''
       this.userCreateDialog = true
     },
     openUserUpdateDialog () {
       this.msgError = ''
+      this.msgSuccess = ''
       this.userUpdateDialog = true
     },
 
@@ -202,7 +238,7 @@ export default {
       this.selectedUser = action.user
       switch (action.item.action) {
         case 'update':
-          this.userUpdateDialog = true
+          this.openUserUpdateDialog()
           this.selectedUser = action.user
           break
         case 'recorver':
@@ -282,6 +318,22 @@ export default {
         await this.updateUser({ login, firstName, lastName, email })
         this.userUpdateDialog = false
         this.msgError = ''
+      })
+    },
+    tryResetUserPassword ({ login }) {
+      return this.tryActionWrapper(async () => {
+        const pass = await this.resetUserPassword({ login })
+        if (pass) {
+          this.msgSuccess = `Nové heslo uživatele '${login}': ${pass}`
+        }
+        // this.userUpdateDialog = false
+        this.msgError = ''
+      })
+    },
+    tryChangeUserPassword ({ login }) {
+      return this.tryActionWrapper(async () => {
+        await this.resetUserPassword({ login })
+        // this.userUpdateDialog = false
       })
     },
 
@@ -468,6 +520,26 @@ export default {
               data: data,
             })
           } // if (unlockUser)
+        },
+      })
+    },
+
+    async resetUserPassword ({ login }) {
+      await simulateLoading()
+      const result = await this.$apollo.mutate({
+        mutation: gql.resetUserPassword,
+        variables: {
+          login,
+        },
+      })
+      return result.data.resetUserPassword
+    },
+    async changeUserPassword ({ login, oldPassword, newPassword }) {
+      await simulateLoading()
+      await this.$apollo.mutate({
+        mutation: gql.changeUserPassword,
+        variables: {
+          login, oldPassword, newPassword,
         },
       })
     },
