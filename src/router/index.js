@@ -1,44 +1,42 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import PageMyNIs from '../views/bpmn/Page_MyNIs.vue'
-import PageNI from '../views/bpmn/Page_NI.vue'
-import PageNIs from '../views/bpmn/Page_NIs.vue'
-import PagePI from '../views/bpmn/Page_PI.vue'
-import PagePT from '../views/bpmn/Page_PT.vue'
-import PagePTs from '../views/bpmn/Page_PTs.vue'
-import Groups from '../views/Groups.vue'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
-import Users from '../views/Users.vue'
 
+// import PageMyNIs from '../views/bpmn/Page_MyNIs.vue'
+// import PageNI from '../views/bpmn/Page_NI.vue'
+// import PageNIs from '../views/bpmn/Page_NIs.vue'
+// import PagePI from '../views/bpmn/Page_PI.vue'
+// import PagePT from '../views/bpmn/Page_PT.vue'
+// import PagePTs from '../views/bpmn/Page_PTs.vue'
 // import PagePIs from '../views/bpmn/Page_PIs.vue'
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/pts',
-    component: PagePTs,
+    component: () => import('../views/bpmn/Page_PTs.vue'),
   },
   {
     path: '/pt/:id',
-    component: PagePT,
+    component: () => import('../views/bpmn/Page_PT.vue'),
   },
   {
     path: '/pi/:id',
-    component: PagePI,
+    component: () => import('../views/bpmn/Page_PI.vue'),
   },
   {
     path: '/ni/:id',
-    component: PageNI,
+    component: () => import('../views/bpmn/Page_NI.vue'),
   },
   {
     path: '/nis4me',
-    component: PageNIs,
+    component: () => import('../views/bpmn/Page_NIs.vue'),
   },
   {
     path: '/mynis',
-    component: PageMyNIs,
+    component: () => import('../views/bpmn/Page_MyNIs.vue'),
   },
   {
     path: '/',
@@ -50,23 +48,23 @@ const routes = [
     name: 'Login',
     component: Login,
   },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
-  },
+  // {
+  //   path: '/about',
+  //   name: 'About',
+  //   // route level code-splitting
+  //   // this generates a separate chunk (about.[hash].js) for this route
+  //   // which is lazy-loaded when the route is visited.
+  //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+  // },
   {
     path: '/groups',
     name: 'Groups',
-    component: Groups,
+    component: () => import('../views/Groups.vue'),
   },
   {
     path: '/users',
     name: 'Users',
-    component: Users,
+    component: () => import('../views/Users.vue'),
   },
 ]
 
