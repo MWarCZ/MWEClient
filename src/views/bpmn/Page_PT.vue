@@ -126,9 +126,9 @@ import NTList from '../../components/bpmn/NT_List'
 import PIList from '../../components/bpmn/PI_List'
 import PIFilter from '../../components/bpmn/PI_Filter'
 import PTInfo from '../../components/bpmn/PT_Info'
-import YesNoDialog from '../../components/YesNoDialog'
-import FullDialog from '../../components/FullDialog'
-import PTEditor from '../../components/bpmn/PT_Editor'
+// import YesNoDialog from '../../components/YesNoDialog'
+// import FullDialog from '../../components/FullDialog'
+// import PTEditor from '../../components/bpmn/PT_Editor'
 import BackButton from '../../components/BackButton'
 
 import { simulateLoading } from '../../simulateLoading'
@@ -159,9 +159,9 @@ export default {
     PIList,
     PIFilter,
     PTInfo,
-    YesNoDialog,
-    FullDialog,
-    PTEditor,
+    FullDialog: () => import(/* webpackChunkName: "FullDialog" */ '../../components/FullDialog'),
+    YesNoDialog: () => import(/* webpackChunkName: "YesNoDialog" */ '../../components/YesNoDialog'),
+    PTEditor: () => import(/* webpackChunkName: "PTEditor" */ '../../components/bpmn/PT_Editor'),
     BackButton,
   },
   mounted () {

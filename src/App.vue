@@ -140,8 +140,8 @@
 <script>
 // import ApolloExample from './components/ApolloExample'
 import Login from './components/Login'
-import gqlHello from './graphql/Hello.gql'
-import gqlHelloW from './graphql/HelloWorld.gql'
+// import gqlHello from './graphql/Hello.gql'
+// import gqlHelloW from './graphql/HelloWorld.gql'
 import gqlClient from './graphql/auth/client.gql'
 // import gql from 'graphql-tag'
 import gqlConnected from './graphql/local/local.gql'
@@ -221,14 +221,14 @@ export default {
   },
 
   apollo: {
-    helloW: {
-      query: gqlHelloW,
-      variables: { name: 'Johan' },
-      update: data => data.hello,
-    },
-    hello: {
-      query: gqlHello,
-    },
+    // helloW: {
+    //   query: gqlHelloW,
+    //   variables: { name: 'Johan' },
+    //   update: data => data.hello,
+    // },
+    // hello: {
+    //   query: gqlHello,
+    // },
     connected: {
       query: gqlConnected,
     },

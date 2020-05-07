@@ -2,7 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import Home from '../views/Home.vue'
-import Login from '../views/Login.vue'
+
+// import Login from '../views/Login.vue'
 
 // import PageMyNIs from '../views/bpmn/Page_MyNIs.vue'
 // import PageNI from '../views/bpmn/Page_NI.vue'
@@ -16,27 +17,27 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/pts',
-    component: () => import('../views/bpmn/Page_PTs.vue'),
+    component: () => import(/* webpackChunkName: "pts" */ '../views/bpmn/Page_PTs.vue'),
   },
   {
     path: '/pt/:id',
-    component: () => import('../views/bpmn/Page_PT.vue'),
+    component: () => import(/* webpackChunkName: "pt" */ '../views/bpmn/Page_PT.vue'),
   },
   {
     path: '/pi/:id',
-    component: () => import('../views/bpmn/Page_PI.vue'),
+    component: () => import(/* webpackChunkName: "pi" */ '../views/bpmn/Page_PI.vue'),
   },
   {
     path: '/ni/:id',
-    component: () => import('../views/bpmn/Page_NI.vue'),
+    component: () => import(/* webpackChunkName: "ni" */ '../views/bpmn/Page_NI.vue'),
   },
   {
     path: '/nis4me',
-    component: () => import('../views/bpmn/Page_NIs.vue'),
+    component: () => import(/* webpackChunkName: "nis4me" */ '../views/bpmn/Page_NIs.vue'),
   },
   {
     path: '/mynis',
-    component: () => import('../views/bpmn/Page_MyNIs.vue'),
+    component: () => import(/* webpackChunkName: "mynis" */ '../views/bpmn/Page_MyNIs.vue'),
   },
   {
     path: '/',
@@ -46,7 +47,7 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: Login,
+    component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue'),
   },
   // {
   //   path: '/about',
@@ -59,12 +60,12 @@ const routes = [
   {
     path: '/groups',
     name: 'Groups',
-    component: () => import('../views/Groups.vue'),
+    component: () => import(/* webpackChunkName: "groups" */ '../views/Groups.vue'),
   },
   {
     path: '/users',
     name: 'Users',
-    component: () => import('../views/Users.vue'),
+    component: () => import(/* webpackChunkName: "users" */ '../views/Users.vue'),
   },
 ]
 

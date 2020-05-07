@@ -146,10 +146,10 @@
 <script>
 import NIInfo from '../../components/bpmn/NI_Info'
 import NTInfo from '../../components/bpmn/NT_Info'
-import YesNoDialog from '../../components/YesNoDialog'
-import FullDialog from '../../components/FullDialog'
+// import YesNoDialog from '../../components/YesNoDialog'
+// import FullDialog from '../../components/FullDialog'
 import BackButton from '../../components/BackButton'
-import AdditionsForm from '../../components/bpmn/AdditionsForm'
+// import AdditionsForm from '../../components/bpmn/AdditionsForm'
 
 import { simulateLoading } from '../../simulateLoading'
 
@@ -175,10 +175,10 @@ export default {
   components: {
     NIInfo,
     NTInfo,
-    YesNoDialog,
-    FullDialog,
     BackButton,
-    AdditionsForm,
+    FullDialog: () => import(/* webpackChunkName: "FullDialog" */ '../../components/FullDialog'),
+    YesNoDialog: () => import(/* webpackChunkName: "YesNoDialog" */ '../../components/YesNoDialog'),
+    AdditionsForm: () => import(/* webpackChunkName: "AdditionsForm" */ '../../components/bpmn/AdditionsForm'),
   },
   mounted () {
     // this.$apollo.queries.nodeInstance.refetch()

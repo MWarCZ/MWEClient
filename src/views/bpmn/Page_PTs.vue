@@ -104,10 +104,10 @@
 import PTList from '../../components/bpmn/PT_List'
 import PTFilter from '../../components/bpmn/PT_Filter'
 import NTList from '../../components/bpmn/NT_List'
-import YesNoDialog from '../../components/YesNoDialog'
-import FullDialog from '../../components/FullDialog'
-import PTUploader from '../../components/bpmn/PT_Uploader'
-import PTEditor from '../../components/bpmn/PT_Editor'
+// import YesNoDialog from '../../components/YesNoDialog'
+// import FullDialog from '../../components/FullDialog'
+// import PTUploader from '../../components/bpmn/PT_Uploader'
+// import PTEditor from '../../components/bpmn/PT_Editor'
 
 import { simulateLoading } from '../../simulateLoading'
 
@@ -134,10 +134,10 @@ export default {
     PTList,
     PTFilter,
     NTList,
-    YesNoDialog,
-    FullDialog,
-    PTUploader,
-    PTEditor,
+    YesNoDialog: () => import(/* webpackChunkName: "YesNoDialog" */ '../../components/YesNoDialog'),
+    FullDialog: () => import(/* webpackChunkName: "FullDialog" */ '../../components/FullDialog'),
+    PTUploader: () => import(/* webpackChunkName: "PTUploader" */ '../../components/bpmn/PT_Uploader'),
+    PTEditor: () => import(/* webpackChunkName: "PTEditor" */ '../../components/bpmn/PT_Editor'),
   },
   mounted () {
     this.$apollo.queries.processTemplates.refetch()
