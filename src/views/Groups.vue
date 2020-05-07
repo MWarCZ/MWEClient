@@ -131,10 +131,10 @@
 
 <script>
 import GList from '../components/GList.vue'
-import GEditor from '../components/GEditor.vue'
+// import GEditor from '../components/GEditor.vue'
 import GMList from '../components/GMList.vue'
-import FullDialog from '../components/FullDialog'
-import YesNoDialog from '../components/YesNoDialog'
+// import FullDialog from '../components/FullDialog'
+// import YesNoDialog from '../components/YesNoDialog'
 
 import { simulateLoading } from '../simulateLoading'
 
@@ -177,9 +177,9 @@ export default {
     // ListGroups,
     GList,
     GMList,
-    FullDialog,
-    GEditor,
-    YesNoDialog,
+    FullDialog: () => import(/* webpackChunkName: "FullDialog" */ '../components/FullDialog'),
+    YesNoDialog: () => import(/* webpackChunkName: "YesNoDialog" */ '../components/YesNoDialog'),
+    GEditor: () => import(/* webpackChunkName: "GEditor" */ '../components/GEditor'),
   },
   data () {
     return {

@@ -5,7 +5,6 @@ import vuetify from './plugins/vuetify'
 import router from './router'
 import { createProvider } from './vue-apollo'
 
-// import './registerServiceWorker'
 Vue.config.productionTip = false
 
 new Vue({

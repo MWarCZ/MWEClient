@@ -98,11 +98,11 @@
 </template>
 <script>
 import UList from '../components/UList.vue'
-import UEditor from '../components/UEditor.vue'
-import UCreateEditor from '../components/UCreateEditor.vue'
-import FullDialog from '../components/FullDialog'
-import YesNoDialog from '../components/YesNoDialog'
-import UChangePassword from '../components/UChangePassword.vue'
+// import UEditor from '../components/UEditor.vue'
+// import UCreateEditor from '../components/UCreateEditor.vue'
+// import FullDialog from '../components/FullDialog'
+// import YesNoDialog from '../components/YesNoDialog'
+// import UChangePassword from '../components/UChangePassword.vue'
 
 import { simulateLoading } from '../simulateLoading'
 
@@ -142,11 +142,11 @@ const gql = {
 export default {
   components: {
     UList,
-    UEditor,
-    FullDialog,
-    UCreateEditor,
-    YesNoDialog,
-    UChangePassword,
+    FullDialog: () => import(/* webpackChunkName: "FullDialog" */ '../components/FullDialog'),
+    YesNoDialog: () => import(/* webpackChunkName: "YesNoDialog" */ '../components/YesNoDialog'),
+    UEditor: () => import(/* webpackChunkName: "UEditor" */ '../components/UEditor'),
+    UCreateEditor: () => import(/* webpackChunkName: "UCreateEditor" */ '../components/UCreateEditor'),
+    UChangePassword: () => import(/* webpackChunkName: "UChangePassword" */ '../components/UChangePassword'),
   },
   data () {
     return {
@@ -330,9 +330,9 @@ export default {
         this.msgError = ''
       })
     },
-    tryChangeUserPassword ({ login }) {
+    tryChangeUserPassword ({ login, oldPassword, newPassword }) {
       return this.tryActionWrapper(async () => {
-        await this.resetUserPassword({ login })
+        await this.changeUserPassword({ login, oldPassword, newPassword })
         // this.userUpdateDialog = false
       })
     },

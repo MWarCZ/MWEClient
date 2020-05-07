@@ -101,8 +101,8 @@ import NIList from '../../components/bpmn/NI_List'
 import NIFilter from '../../components/bpmn/NI_Filter'
 import PIInfo from '../../components/bpmn/PI_Info'
 import PTInfo from '../../components/bpmn/PT_Info'
-import YesNoDialog from '../../components/YesNoDialog'
-import FullDialog from '../../components/FullDialog'
+// import YesNoDialog from '../../components/YesNoDialog'
+// import FullDialog from '../../components/FullDialog'
 import BackButton from '../../components/BackButton'
 
 import { simulateLoading } from '../../simulateLoading'
@@ -130,8 +130,8 @@ export default {
     NIFilter,
     PIInfo,
     PTInfo,
-    YesNoDialog,
-    FullDialog,
+    FullDialog: () => import(/* webpackChunkName: "FullDialog" */ '../../components/FullDialog'),
+    YesNoDialog: () => import(/* webpackChunkName: "YesNoDialog" */ '../../components/YesNoDialog'),
     BackButton,
   },
   mounted () {

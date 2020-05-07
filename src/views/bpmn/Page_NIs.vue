@@ -63,7 +63,7 @@
 <script>
 import NIList from '../../components/bpmn/NI_List'
 import NIFilter from '../../components/bpmn/NI_Filter'
-import YesNoDialog from '../../components/YesNoDialog'
+// import YesNoDialog from '../../components/YesNoDialog'
 
 import NIIcon from '../../components/bpmn/NI_IconStatus'
 
@@ -86,7 +86,7 @@ export default {
   components: {
     NIList,
     NIFilter,
-    YesNoDialog,
+    YesNoDialog: () => import(/* webpackChunkName: "YesNoDialog" */ '../../components/YesNoDialog'),
     NIIcon,
   },
   mounted () {
