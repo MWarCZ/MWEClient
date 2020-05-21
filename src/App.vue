@@ -68,10 +68,10 @@
         </template>
         <v-card v-if="client">
           <v-card-title primary-title>
-            {{client.login}} {{client.login}}
+            {{client.lastName}} {{client.firstName}}
           </v-card-title>
           <v-card-text>
-            Toto je text xxx.
+            {{client.email}}
           </v-card-text>
         </v-card>
         <v-list>
